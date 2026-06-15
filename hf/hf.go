@@ -1,35 +1,33 @@
 // Package hf is the library behind the hf command line:
-// the HTTP client, request shaping, and the typed data models for hf.
+// the HTTP client, request shaping, and typed data models for Hugging Face.
 //
 // The Client here is the spine every command shares. It sets a real
 // User-Agent, paces requests so a busy session stays polite, and retries the
-// transient failures (429 and 5xx) that any public site throws under load.
-// Build your endpoint calls and JSON decoding on top of it.
+// transient failures (429 and 5xx) that any public API throws under load.
 package hf
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
-	"regexp"
 	"strings"
 	"time"
 )
 
-// DefaultUserAgent identifies the client to hf. A real, honest
+// DefaultUserAgent identifies the client to Hugging Face. A real, honest
 // User-Agent is both polite and the thing most likely to keep you unblocked.
 const DefaultUserAgent = "hf/dev (+https://github.com/tamnd/hf-cli)"
 
 // Host is the site this client talks to, and the host the URI driver in
-// domain.go claims. The scaffold points it at hf.com; change it once you
-// know the real endpoints you want to read.
-const Host = "hf.com"
+// domain.go claims.
+const Host = "huggingface.co"
 
-// BaseURL is the root every request is built from.
-const BaseURL = "https://" + Host
+// baseURL is the root every request is built from.
+const baseURL = "https://huggingface.co"
 
-// Client talks to hf over HTTP.
+// Client talks to Hugging Face over HTTP.
 type Client struct {
 	HTTP      *http.Client
 	UserAgent string
@@ -51,9 +49,106 @@ func NewClient() *Client {
 	}
 }
 
+// Paper holds the fields callers care about for a Hugging Face daily paper.
+type Paper struct {
+	ID      string   `json:"id"      kit:"id" table:"id"`
+	Title   string   `json:"title"            table:"title"`
+	Upvotes int      `json:"upvotes"          table:"upvotes"`
+	Authors []string `json:"authors"          table:"authors"`
+	URL     string   `json:"url"              table:"url,url"`
+}
+
+// wire types for the API responses
+
+type wireAuthor struct {
+	Name string `json:"name"`
+}
+
+type wirePaper struct {
+	ID      string       `json:"id"`
+	Title   string       `json:"title"`
+	Upvotes int          `json:"upvotes"`
+	Authors []wireAuthor `json:"authors"`
+}
+
+type wireEntry struct {
+	ID    string    `json:"id"`
+	Paper wirePaper `json:"paper"`
+}
+
+// Top returns the top daily papers. date should be "YYYY-MM-DD"; if empty it
+// defaults to yesterday UTC. It tries the daily_papers endpoint first and falls
+// back to the papers endpoint if that returns no results.
+func (c *Client) Top(ctx context.Context, date string, limit int) ([]*Paper, error) {
+	if limit <= 0 {
+		limit = 20
+	}
+	if date == "" {
+		date = time.Now().UTC().Add(-24 * time.Hour).Format("2006-01-02")
+	}
+
+	url := fmt.Sprintf("%s/api/daily_papers?date=%s&limit=%d", baseURL, date, limit)
+	papers, err := c.fetchPapers(ctx, url)
+	if err != nil || len(papers) == 0 {
+		// fallback
+		fallback := fmt.Sprintf("%s/api/papers?limit=%d", baseURL, limit)
+		papers, err = c.fetchPapers(ctx, fallback)
+		if err != nil {
+			return nil, err
+		}
+	}
+	return papers, nil
+}
+
+// fetchPapers fetches a papers list endpoint and decodes the response.
+func (c *Client) fetchPapers(ctx context.Context, url string) ([]*Paper, error) {
+	body, err := c.Get(ctx, url)
+	if err != nil {
+		return nil, err
+	}
+
+	var entries []wireEntry
+	if err := json.Unmarshal(body, &entries); err != nil {
+		return nil, fmt.Errorf("decode papers: %w", err)
+	}
+
+	out := make([]*Paper, 0, len(entries))
+	for _, e := range entries {
+		p := toPaper(e)
+		out = append(out, p)
+	}
+	return out, nil
+}
+
+// toPaper converts a wire entry to the public Paper type.
+func toPaper(e wireEntry) *Paper {
+	id := e.Paper.ID
+	if id == "" {
+		id = e.ID
+	}
+
+	// build author list (first 3)
+	var authors []string
+	for i, a := range e.Paper.Authors {
+		if i >= 3 {
+			break
+		}
+		if a.Name != "" {
+			authors = append(authors, a.Name)
+		}
+	}
+
+	return &Paper{
+		ID:      id,
+		Title:   e.Paper.Title,
+		Upvotes: e.Paper.Upvotes,
+		Authors: authors,
+		URL:     baseURL + "/papers/" + id,
+	}
+}
+
 // Get fetches url and returns the response body. It paces and retries according
-// to the client's settings. The caller owns nothing extra; the body is read
-// fully and closed here.
+// to the client's settings.
 func (c *Client) Get(ctx context.Context, url string) ([]byte, error) {
 	var lastErr error
 	for attempt := 0; attempt <= c.Retries; attempt++ {
@@ -83,6 +178,7 @@ func (c *Client) do(ctx context.Context, url string) (body []byte, retry bool, e
 		return nil, false, err
 	}
 	req.Header.Set("User-Agent", c.UserAgent)
+	req.Header.Set("Accept", "application/json")
 
 	resp, err := c.HTTP.Do(req)
 	if err != nil {
@@ -123,78 +219,7 @@ func backoff(attempt int) time.Duration {
 	return d
 }
 
-// Page is the scaffold's one example record: a single page, addressed by the
-// path that names it on hf.com. It is a stand-in for the typed records you
-// will model from the real hf endpoints. The kit struct tags make it
-// addressable as a resource URI (see domain.go): ID is the URI id, and Body is
-// the long text `hf cat` and the Markdown export print.
-type Page struct {
-	ID    string `json:"id" kit:"id"`
-	URL   string `json:"url"`
-	Title string `json:"title,omitempty"`
-	Body  string `json:"body,omitempty" kit:"body"`
-}
-
-// GetPage fetches one page by its path (for example "wiki/Go") and returns it as
-// a record. The scaffold keeps a plain-text preview of the response as the body;
-// replace the parsing with the real fields once you know the endpoint's shape.
-func (c *Client) GetPage(ctx context.Context, path string) (*Page, error) {
-	path = strings.Trim(path, "/")
-	url := BaseURL + "/" + path
-	body, err := c.Get(ctx, url)
-	if err != nil {
-		return nil, err
-	}
-	return &Page{ID: path, URL: url, Title: path, Body: pageText(body)}, nil
-}
-
-// PageLinks fetches a page and returns the same-host pages it links to, as page
-// stubs. It shows the member-listing pattern the URI driver relies on: every
-// stub carries enough (an id and a URL) to be addressed and followed on its own.
-func (c *Client) PageLinks(ctx context.Context, path string, limit int) ([]*Page, error) {
-	path = strings.Trim(path, "/")
-	body, err := c.Get(ctx, BaseURL+"/"+path)
-	if err != nil {
-		return nil, err
-	}
-	var out []*Page
-	seen := map[string]bool{}
-	for _, p := range linkPaths(body) {
-		if seen[p] {
-			continue
-		}
-		seen[p] = true
-		out = append(out, &Page{ID: p, URL: BaseURL + "/" + p})
-		if limit > 0 && len(out) >= limit {
-			break
-		}
-	}
-	return out, nil
-}
-
-var (
-	hrefRE = regexp.MustCompile(`href="(/[^":#?]+)"`)
-	tagRE  = regexp.MustCompile(`<[^>]+>`)
-)
-
-// linkPaths pulls the relative link targets out of an HTML response, so a list
-// op can turn each into an addressable page stub.
-func linkPaths(body []byte) []string {
-	var out []string
-	for _, m := range hrefRE.FindAllSubmatch(body, -1) {
-		if p := strings.Trim(string(m[1]), "/"); p != "" {
-			out = append(out, p)
-		}
-	}
-	return out
-}
-
-// pageText reduces an HTML response to a short plain-text preview, a stand-in
-// for the typed extract a real endpoint would hand you.
-func pageText(body []byte) string {
-	s := strings.Join(strings.Fields(tagRE.ReplaceAllString(string(body), " ")), " ")
-	if len(s) > 500 {
-		s = s[:500]
-	}
-	return s
+// AuthorsString returns the first 3 authors joined by ", ".
+func (p *Paper) AuthorsString() string {
+	return strings.Join(p.Authors, ", ")
 }
