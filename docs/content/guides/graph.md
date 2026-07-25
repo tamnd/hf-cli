@@ -4,10 +4,9 @@ description: "How hf turns the hub into nodes and edges, and how to crawl them."
 weight: 10
 ---
 
-The hub is already a graph. A model's card names the datasets it trained on, its
-tags name the paper it cites, its id names the org that owns it, and the API
-hands back a hundred space ids that load it. `hf` reads all of that and gives
-you nodes and edges.
+The hub is already a graph.
+A model's card names the datasets it trained on, its tags name the paper it cites, its id names the org that owns it, and the API hands back a hundred space ids that load it.
+`hf` reads all of that and gives you nodes and edges.
 
 ## Addresses
 
@@ -24,8 +23,7 @@ hf://paper/1810.04805
 hf://tag/arxiv:1810.04805
 ```
 
-`hf uri` resolves anything you can paste into one of those, and `hf url` goes
-the other way:
+`hf uri` resolves anything you can paste into one of those, and `hf url` goes the other way:
 
 ```bash
 hf uri https://huggingface.co/datasets/rajpurkar/squad
@@ -33,9 +31,8 @@ hf uri datasets/rajpurkar/squad
 hf url hf://paper/1810.04805
 ```
 
-Two segments with no kind prefix is a model, one segment is a namespace. That is
-a deliberate bet on what most of the hub is, and `hf get` corrects itself when
-the guess turns out to be wrong.
+Two segments with no kind prefix is a model, one segment is a namespace.
+That is a deliberate bet on what most of the hub is, and `hf get` corrects itself when the guess turns out to be wrong.
 
 ## One entity's edges
 
@@ -50,11 +47,10 @@ An edge is a subject, a predicate, an object, and the source it came from:
 {"subject":"hf://model/google-bert/bert-base-uncased","predicate":"hf:trainedOn","object":"hf://dataset/bookcorpus","objectKind":"dataset","source":"tag"}
 ```
 
-`source` is the part worth paying attention to. It is one of `api`, `page`,
-`card`, `tag`, or `derived`, and it tells you how much to trust the edge. An
-`api` edge is the hub's own record of a relation. A `card` edge is what an
-author wrote in their README, which is frequently a name that does not resolve
-to anything.
+`source` is the part worth paying attention to.
+It is one of `api`, `page`, `card`, `tag`, or `derived`, and it tells you how much to trust the edge.
+An `api` edge is the hub's own record of a relation.
+A `card` edge is what an author wrote in their README, which is frequently a name that does not resolve to anything.
 
 ## The predicates
 
@@ -86,8 +82,7 @@ Use:
 | `hf:servedBy` | model | inference provider |
 | `hf:hasTask`, `hf:hasLibrary`, `hf:hasTag`, `hf:license`, `hf:language` | repo | vocabulary term |
 
-Social: `hf:likes`, `hf:follows`, `hf:upvotes`, `hf:authorOf`, `hf:mentions`,
-`hf:repliesTo`.
+Social: `hf:likes`, `hf:follows`, `hf:upvotes`, `hf:authorOf`, `hf:mentions`, `hf:repliesTo`.
 
 ## Crawling
 
@@ -97,11 +92,9 @@ hf crawl google-bert/bert-base-uncased --depth 2 --follow ownedBy,derivesFrom
 hf crawl hf://org/google --depth 2 --nodes-only -o url
 ```
 
-The walk is breadth-first, deduplicated by URI, and bounded three ways at once:
-`--depth`, `--max-nodes`, and `--max-requests`. Leave the bounds at their
-defaults for anything exploratory. Without `--follow`, the walk takes the
-structural predicates only, which is what keeps a crawl from wandering into
-every model that shares a license with the seed.
+The walk is breadth-first, deduplicated by URI, and bounded three ways at once: `--depth`, `--max-nodes`, and `--max-requests`.
+Leave the bounds at their defaults for anything exploratory.
+Without `--follow`, the walk takes the structural predicates only, which is what keeps a crawl from wandering into every model that shares a license with the seed.
 
 Output streams, so this works on an org with tens of thousands of repos:
 
@@ -119,9 +112,7 @@ hf parents  Jorgeutd/bert-base-uncased-finetuned-surveyclassification
 hf citations 1810.04805                      # every repo tagged with the paper
 ```
 
-`hf children` is the one that is not obvious from the API docs: it runs
-`filter=base_model:<relation>:<id>` once per relation and merges the results,
-which is the only way to get a model's descendants.
+`hf children` is the one that is not obvious from the API docs: it runs `filter=base_model:<relation>:<id>` once per relation and merges the results, which is the only way to get a model's descendants.
 
 ## Composing
 

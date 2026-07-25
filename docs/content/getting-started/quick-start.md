@@ -10,9 +10,8 @@ Once `hf` is on your `PATH`, read a model:
 hf model google-bert/bert-base-uncased
 ```
 
-The argument is a ref, and every command that takes one accepts every form of
-it. A bare name, an owner-qualified id, a URL you copied out of a browser, and a
-canonical URI are all the same command:
+The argument is a ref, and every command that takes one accepts every form of it.
+A bare name, an owner-qualified id, a URL you copied out of a browser, and a canonical URI are all the same command:
 
 ```bash
 hf model bert-base-uncased
@@ -38,10 +37,9 @@ hf model google-bert/bert-base-uncased -o json | jq .safetensors
 hf models --author google -o url | head -5
 ```
 
-`-o` takes `table`, `json`, `jsonl`, `csv`, `tsv`, `url`, or `raw`. Left to
-`auto`, it prints a table to a terminal and JSONL into a pipe, so the same
-command reads well by hand and parses cleanly downstream. See
-[output formats](/reference/output/) for the full contract.
+`-o` takes `table`, `json`, `jsonl`, `csv`, `tsv`, `url`, or `raw`.
+Left to `auto`, it prints a table to a terminal and JSONL into a pipe, so the same command reads well by hand and parses cleanly downstream.
+See [output formats](/reference/output/) for the full contract.
 
 ## List and search
 
@@ -52,22 +50,20 @@ hf search bert                     # every entity kind at once
 hf trending --type model
 ```
 
-Listing streams. `-n` stops early without fetching the next page, and leaving it
-off means the whole result set, which for `hf models` is a few million records
-and a very long afternoon.
+Listing streams.
+`-n` stops early without fetching the next page, and leaving it off means the whole result set, which for `hf models` is a few million records and a very long afternoon.
 
 ## Go deeper
 
-The API does not return everything the page shows. `--deep` fetches the rendered
-page as well and merges the fields only it carries:
+The API does not return everything the page shows.
+`--deep` fetches the rendered page as well and merges the fields only it carries:
 
 ```bash
 hf model google-bert/bert-base-uncased --deep -o json | jq .tagObjs
 hf org google --deep -o json | jq '.models | length'
 ```
 
-`--card` adds the README body, and `hf card` gives you just the parsed front
-matter.
+`--card` adds the README body, and `hf card` gives you just the parsed front matter.
 
 ## Walk the graph
 
@@ -80,8 +76,7 @@ hf children google-bert/bert-base-uncased     # what was fine-tuned from it
 hf crawl hf://org/google --depth 2 -n 500
 ```
 
-See [walk the graph](/guides/graph/) for what the edges mean and where each one
-comes from.
+See [walk the graph](/guides/graph/) for what the edges mean and where each one comes from.
 
 ## Export it
 

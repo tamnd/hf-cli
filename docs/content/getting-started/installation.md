@@ -4,8 +4,8 @@ description: "Install hf with Go, Homebrew, Scoop, a Linux package, a release ar
 weight: 20
 ---
 
-hf is a single pure-Go binary with nothing to run alongside it. Pick whichever
-channel suits you.
+hf is a single pure-Go binary with nothing to run alongside it.
+Pick whichever channel suits you.
 
 ## Go
 
@@ -13,8 +13,8 @@ channel suits you.
 go install github.com/tamnd/hf-cli/cmd/hf@latest
 ```
 
-That puts `hf` in `$(go env GOPATH)/bin`, which is `~/go/bin` unless you moved
-it. Make sure that directory is on your `PATH`.
+That puts `hf` in `$(go env GOPATH)/bin`, which is `~/go/bin` unless you moved it.
+Make sure that directory is on your `PATH`.
 
 ## Homebrew (macOS)
 
@@ -22,8 +22,8 @@ it. Make sure that directory is on your `PATH`.
 brew install --cask tamnd/tap/hf
 ```
 
-The cask installs the prebuilt macOS binary. On Linux, use the packages below or
-`go install`.
+The cask installs the prebuilt macOS binary.
+On Linux, use the packages below or `go install`.
 
 ## Scoop (Windows)
 
@@ -34,8 +34,7 @@ scoop install hf
 
 ## Linux (apt and dnf)
 
-A signed apt and dnf repository tracks every release, so `apt upgrade` and
-`dnf upgrade` keep hf current.
+A signed apt and dnf repository tracks every release, so `apt upgrade` and `dnf upgrade` keep hf current.
 
 ```bash
 # Debian, Ubuntu
@@ -52,12 +51,9 @@ sudo dnf install hf
 
 ## Release archives and Linux packages
 
-Every [release](https://github.com/tamnd/hf-cli/releases) attaches `tar.gz`
-archives (and a `.zip` for Windows) for Linux, macOS, Windows, and FreeBSD on
-amd64 and arm64, plus `.deb`, `.rpm`, and `.apk` packages and a `checksums.txt`
-signed with keyless [cosign](https://docs.sigstore.dev/). Download the one for
-your platform, extract `hf`, and put it on your `PATH`. To install a package
-directly without the repository above:
+Every [release](https://github.com/tamnd/hf-cli/releases) attaches `tar.gz` archives (and a `.zip` for Windows) for Linux, macOS, Windows, and FreeBSD on amd64 and arm64, plus `.deb`, `.rpm`, and `.apk` packages and a `checksums.txt` signed with keyless [cosign](https://docs.sigstore.dev/).
+Download the one for your platform, extract `hf`, and put it on your `PATH`.
+To install a package directly without the repository above:
 
 ```bash
 # Debian, Ubuntu
