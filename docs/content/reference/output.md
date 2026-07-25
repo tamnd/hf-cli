@@ -5,8 +5,7 @@ weight: 30
 ---
 
 Every command renders through one formatter, so the same flags work everywhere.
-Pick a format with `-o`, or let `hf` choose: a table when it is writing to a
-terminal, JSONL when it is writing to a pipe.
+Pick a format with `-o`, or let `hf` choose: a table when it is writing to a terminal, JSONL when it is writing to a pipe.
 
 ## Formats
 
@@ -35,19 +34,16 @@ hf cat google-bert/bert-base-uncased -o raw   # the bytes, unformatted
 
 ## Columns are a summary, JSON is everything
 
-A record models everything the hub said about a thing, which for a model is
-around sixty fields and for an org page is more. That does not fit across a
-screen, so each record type marks the handful of fields worth a column and hides
-the rest:
+A record models everything the hub said about a thing, which for a model is around sixty fields and for an org page is more.
+That does not fit across a screen, so each record type marks the handful of fields worth a column and hides the rest:
 
 ```bash
 hf models --author google -o csv | head -1
 id,gated,likes,downloads,modified,task,library
 ```
 
-Hidden means hidden from `table`, `list`, `markdown`, `csv`, and `tsv` only. The
-JSON formats always carry the whole record, so a field you cannot see in the
-table is still one field away in a pipe:
+Hidden means hidden from `table`, `list`, `markdown`, `csv`, and `tsv` only.
+The JSON formats always carry the whole record, so a field you cannot see in the table is still one field away in a pipe:
 
 ```bash
 hf model google-bert/bert-base-uncased -o json | jq '.[0].safetensors'
@@ -55,38 +51,33 @@ hf model google-bert/bert-base-uncased -o json | jq '.[0].safetensors'
 
 ## Narrowing and widening columns
 
-`--fields` names exactly the columns you want, in the order you want them, and
-a name can be one of the hidden fields:
+`--fields` names exactly the columns you want, in the order you want them, and a name can be one of the hidden fields:
 
 ```bash
 hf models --author google --fields id,downloads
 hf models --author google --fields id,trendingScore,createdAt
 ```
 
-The names are the JSON keys. A name the record does not have comes back as an
-empty column, so a typo shows up as a blank rather than shifting the row.
+The names are the JSON keys.
+A name the record does not have comes back as an empty column, so a typo shows up as a blank rather than shifting the row.
 
-`--no-header` drops the header row, which helps when a downstream tool expects
-bare rows.
+`--no-header` drops the header row, which helps when a downstream tool expects bare rows.
 
 ## Templating rows
 
-For full control over each line, apply a Go text/template. The template runs
-against the record's JSON, so the names are the JSON keys, lowercase, the same
-ones `jq` would use:
+For full control over each line, apply a Go text/template.
+The template runs against the record's JSON, so the names are the JSON keys, lowercase, the same ones `jq` would use:
 
 ```bash
 hf models --author google --template '{{.id}} has {{.downloads}} downloads'
 hf datasets -n 5 --template '{{.id}}: {{.likes}} likes'
 ```
 
-A name the record does not carry prints `<no value>` rather than failing, which
-is usually a JSON key spelled as a Go field name.
+A name the record does not carry prints `<no value>` rather than failing, which is usually a JSON key spelled as a Go field name.
 
 ## Why auto-detection helps
 
-Because the default adapts to the destination, the same command reads well by
-hand and parses cleanly in a pipe:
+Because the default adapts to the destination, the same command reads well by hand and parses cleanly in a pipe:
 
 ```bash
 hf models --author google       # a table, because this is a terminal

@@ -4,15 +4,13 @@ description: "Declare an operation once and get a command, a route, an MCP tool,
 weight: 60
 ---
 
-Everything `hf` does is one `kit.Handle` registration in `hf/ops.go`, backed by
-a client method and a record type. Add those three pieces and every surface
-updates itself.
+Everything `hf` does is one `kit.Handle` registration in `hf/ops.go`, backed by a client method and a record type.
+Add those three pieces and every surface updates itself.
 
 ## 1. The record
 
-Records live in the `hf` package, one file per family. Every one embeds `Meta`,
-which carries the URI, the live URL, the sources it was built from, and the
-`Extra` map:
+Records live in the `hf` package, one file per family.
+Every one embeds `Meta`, which carries the URI, the live URL, the sources it was built from, and the `Extra` map:
 
 ```go
 type Widget struct {
@@ -30,9 +28,9 @@ func (w *Widget) UnmarshalJSON(b []byte) error {
 }
 ```
 
-`decodeExtra` is the rule the whole tool is built on: decode what you model,
-keep what you do not. Without it, a field the hub adds next month is a field
-nobody ever sees. With it, the test suite fails and you go and model it.
+`decodeExtra` is the rule the whole tool is built on: decode what you model, keep what you do not.
+Without it, a field the hub adds next month is a field nobody ever sees.
+With it, the test suite fails and you go and model it.
 
 ## 2. The client method
 
@@ -51,14 +49,12 @@ func (c *Client) Widget(ctx context.Context, id string) (*Widget, error) {
 }
 ```
 
-`c.Get` handles pacing, auth, retries, caching, and the status-to-error mapping,
-so a method that uses it inherits the whole policy. `setMeta` fills the URI, the
-URL, and the source list.
+`c.Get` handles pacing, auth, retries, caching, and the status-to-error mapping, so a method that uses it inherits the whole policy.
+`setMeta` fills the URI, the URL, and the source list.
 
 ## 3. The operation
 
-An input struct declares the arguments and flags by reflection, and the handler
-emits records:
+An input struct declares the arguments and flags by reflection, and the handler emits records:
 
 ```go
 type widgetIn struct {
@@ -89,7 +85,8 @@ kit.Handle(app, kit.OpMeta{
 }, getWidget)
 ```
 
-That is the whole change. The operation is now:
+That is the whole change.
+The operation is now:
 
 ```bash
 hf widget <id>                            # the command
@@ -109,35 +106,32 @@ ant get hf://widget/<id>                  # the URI dereference, via a host
 | `kit:"flag,inherit"` | a flag the app already defines globally, like `Limit` |
 | `kit:"inject"` | filled in by the app, which is how the client arrives |
 
-Alongside them, `help:"..."`, `default:"..."`, and `enum:"a,b,c"` do what they
-look like.
+Alongside them, `help:"..."`, `default:"..."`, and `enum:"a,b,c"` do what they look like.
 
 ## Resolver ops and list ops
 
 Two fields shape how a host treats an operation:
 
-- **`Single: true`** with **`Resolver: true`** marks the canonical one-record
-  fetch for a `URIType`. It answers `ant get`.
-- **`List: true`** marks a member-lister for a parent resource. It answers
-  `ant ls`, and should emit records that are themselves addressable so every
-  member is a URI a host can follow.
+- **`Single: true`** with **`Resolver: true`** marks the canonical one-record fetch for a `URIType`.
+  It answers `ant get`.
+- **`List: true`** marks a member-lister for a parent resource.
+  It answers `ant ls`, and should emit records that are themselves addressable so every member is a URI a host can follow.
 
 ## Errors
 
-Return the kinds from `kit/errs` and every surface reports the same outcome with
-the same exit code:
+Return the kinds from `kit/errs` and every surface reports the same outcome with the same exit code:
 
 ```go
 return errs.Usage("a post id is user/slug, got %q", id)
 return errs.NotFound("no such widget: %s", id)
 ```
 
-The client already maps hub status codes to those kinds, so most handlers just
-pass the error up.
+The client already maps hub status codes to those kinds, so most handlers just pass the error up.
 
 ## Add it to the tests
 
-`hf/scenario_test.go` has one table that every test drives. Add a line:
+`hf/scenario_test.go` has one table that every test drives.
+Add a line:
 
 ```go
 {Name: "widget", Run: op(widgetIn{Ref: fixWidget}, getWidget)},
@@ -149,13 +143,11 @@ Then record the fixture and write the golden:
 make fixtures
 ```
 
-The offline run now covers the new command: it checks that it returns records,
-that nothing landed in `Extra`, and that the set of fields it produces does not
-shrink later. See the repository README for how the fixtures work.
+The offline run now covers the new command: it checks that it returns records, that nothing landed in `Extra`, and that the set of fields it produces does not shrink later.
+See the repository README for how the fixtures work.
 
 ## Commands that write bytes
 
-An operation that produces a file rather than records is not a `kit.Handle`. Use
-`kit.Command` and register it in `cli/`, the way `cat`, `readme`, `rdf`,
-`export`, and `croissant` do. Those are the escape hatch, and there are only a
-handful of them for a reason: a record is almost always the better answer.
+An operation that produces a file rather than records is not a `kit.Handle`.
+Use `kit.Command` and register it in `cli/`, the way `cat`, `readme`, `rdf`, `export`, and `croissant` do.
+Those are the escape hatch, and there are only a handful of them for a reason: a record is almost always the better answer.

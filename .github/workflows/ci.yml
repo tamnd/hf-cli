@@ -8,13 +8,16 @@ on:
 permissions:
   contents: read
 
+# Cancel an in-flight run when a branch is pushed again.
 concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
   # Build and test on Linux and macOS with the race detector on. gofmt and vet
-  # run here too so a formatting slip fails fast on both platforms.
+  # run here too so a formatting slip fails fast on both platforms. The tests
+  # replay recorded hub responses and never reach the network, so both legs are
+  # deterministic and neither needs a token.
   test:
     strategy:
       fail-fast: false
@@ -22,15 +25,15 @@ jobs:
         os: [ubuntu-latest, macos-latest]
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v5
-      - uses: actions/setup-go@v6
+      - uses: actions/checkout@v7.0.0
+      - uses: actions/setup-go@v6.4.0
         with:
           go-version-file: go.mod
           check-latest: true
           cache: true
       - name: gofmt
         run: |
-          unformatted=$(gofmt -l .)
+          unformatted=$(gofmt -s -l .)
           if [ -n "$unformatted" ]; then
             echo "These files need gofmt -s -w:"
             echo "$unformatted"
@@ -51,13 +54,13 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
-      - uses: actions/setup-go@v6
+      - uses: actions/checkout@v7.0.0
+      - uses: actions/setup-go@v6.4.0
         with:
           go-version-file: go.mod
           check-latest: true
           cache: true
-      - uses: golangci/golangci-lint-action@v8
+      - uses: golangci/golangci-lint-action@v9.2.1
         with:
           version: latest
 
@@ -65,8 +68,8 @@ jobs:
   govulncheck:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
-      - uses: actions/setup-go@v6
+      - uses: actions/checkout@v7.0.0
+      - uses: actions/setup-go@v6.4.0
         with:
           go-version-file: go.mod
           check-latest: true
@@ -81,8 +84,8 @@ jobs:
   tidy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
-      - uses: actions/setup-go@v6
+      - uses: actions/checkout@v7.0.0
+      - uses: actions/setup-go@v6.4.0
         with:
           go-version-file: go.mod
           check-latest: true

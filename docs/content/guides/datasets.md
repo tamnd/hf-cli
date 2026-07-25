@@ -4,9 +4,8 @@ description: "Splits, schemas, statistics, and rows, from the dataset viewer."
 weight: 30
 ---
 
-The dataset viewer is a second API on its own host, and it is where the actual
-contents of a dataset live. `hf` treats it as part of the same tool: same refs,
-same output contract, same flags.
+The dataset viewer is a second API on its own host, and it is where the actual contents of a dataset live.
+`hf` treats it as part of the same tool: same refs, same output contract, same flags.
 
 ## What a dataset supports
 
@@ -16,9 +15,8 @@ Not every dataset is converted, so start here:
 hf valid rajpurkar/squad
 ```
 
-It reports five capabilities: `preview`, `viewer`, `search`, `filter`, and
-`statistics`. A dataset with `viewer: false` will not answer row requests, and
-that is the hub's answer rather than an error on your side.
+It reports five capabilities: `preview`, `viewer`, `search`, `filter`, and `statistics`.
+A dataset with `viewer: false` will not answer row requests, and that is the hub's answer rather than an error on your side.
 
 ## Structure
 
@@ -28,9 +26,8 @@ hf size   rajpurkar/squad     # row and byte counts
 hf schema rajpurkar/squad --split train
 ```
 
-A dataset has configs, and each config has splits. Every command below takes
-`--config` and `--split`, and defaults to the first config and to `train` when
-you leave them off.
+A dataset has configs, and each config has splits.
+Every command below takes `--config` and `--split`, and defaults to the first config and to `train` when you leave them off.
 
 ## Rows
 
@@ -54,9 +51,8 @@ hf dsearch rajpurkar/squad "beyonce" -n 5
 hf filter  rajpurkar/squad "title = 'Beyonce'" -n 5
 ```
 
-`dsearch` is full text over the split. `filter` takes a SQL-ish `WHERE` clause,
-which the viewer evaluates server side, so it is the cheap way to pull a subset
-out of a dataset far too large to download.
+`dsearch` is full text over the split.
+`filter` takes a SQL-ish `WHERE` clause, which the viewer evaluates server side, so it is the cheap way to pull a subset out of a dataset far too large to download.
 
 ## Statistics
 
@@ -65,15 +61,12 @@ hf stats rajpurkar/squad --split train
 hf stats rajpurkar/squad -o json | jq '.[] | {column_name, column_type, mean}'
 ```
 
-Per column, the viewer computes a type and a distribution: minimum, maximum,
-mean, median, standard deviation, and a histogram for numeric columns, value
-counts for categorical ones. This is the fastest way to know what is in a
-dataset without pulling a byte of it.
+Per column, the viewer computes a type and a distribution: minimum, maximum, mean, median, standard deviation, and a histogram for numeric columns, value counts for categorical ones.
+This is the fastest way to know what is in a dataset without pulling a byte of it.
 
 ## Parquet
 
-Every converted dataset is republished as parquet shards, and those are what you
-want for bulk work:
+Every converted dataset is republished as parquet shards, and those are what you want for bulk work:
 
 ```bash
 hf parquet rajpurkar/squad
@@ -88,5 +81,4 @@ hf card    rajpurkar/squad          # the parsed README front matter
 hf croissant rajpurkar/squad        # the MLCommons document
 ```
 
-See [linked data](/guides/linked-data/) for what to do with the Croissant
-output.
+See [linked data](/guides/linked-data/) for what to do with the Croissant output.

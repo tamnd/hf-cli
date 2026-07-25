@@ -8,9 +8,8 @@ weight: 10
 hf <command> [arguments] [flags]
 ```
 
-Run `hf <command> --help` for the full flag list on any command. Every command
-that takes a `<ref>` accepts a bare name, an owner-qualified id, a
-huggingface.co URL, or an `hf://` URI.
+Run `hf <command> --help` for the full flag list on any command.
+Every command that takes a `<ref>` accepts a bare name, an owner-qualified id, a huggingface.co URL, or an `hf://` URI.
 
 ## Read one thing
 
@@ -47,12 +46,9 @@ huggingface.co URL, or an `hf://` URI.
 | `search <query>` | `--type`, across every entity kind |
 | `trending` | `--type` |
 
-The filter flags are sugar over the one `filter=` parameter the API takes,
-joined with AND, so `--task text-generation --library transformers` and
-`--filter text-generation --filter transformers` are the same request.
+The filter flags are sugar over the one `filter=` parameter the API takes, joined with AND, so `--task text-generation --library transformers` and `--filter text-generation --filter transformers` are the same request.
 
-`--item` on collections is the reverse lookup: given a repo, which collections
-contain it.
+`--item` on collections is the reverse lookup: given a repo, which collections contain it.
 
 ## Social
 
@@ -156,6 +152,4 @@ These are shared by every operation, so they work the same on every command.
 | `-q, --quiet` | Suppress progress output |
 | `--color` | `auto`, `always`, or `never` |
 
-See [output formats](/reference/output/) for what `-o`, `--fields`, and
-`--template` produce, and [configuration](/reference/configuration/) for
-environment variables and defaults.
+See [output formats](/reference/output/) for what `-o`, `--fields`, and `--template` produce, and [configuration](/reference/configuration/) for environment variables and defaults.
