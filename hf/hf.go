@@ -1,200 +1,184 @@
-// Package hf is the library behind the hf command line:
-// the HTTP client, request shaping, and the typed data models for hf.
+// Package hf is the library behind the hf command line: the HTTP client for
+// huggingface.co, the typed records for everything the hub publishes, and the
+// graph those records form.
 //
-// The Client here is the spine every command shares. It sets a real
-// User-Agent, paces requests so a busy session stays polite, and retries the
-// transient failures (429 and 5xx) that any public site throws under load.
-// Build your endpoint calls and JSON decoding on top of it.
+// The hub is already a knowledge graph served as web pages. A model declares
+// the dataset it was trained on, the paper it implements, the model it was
+// fine-tuned from, and the license it ships under. A space declares the models
+// it loads. A collection curates across all of them. This package reads those
+// declarations, gives each entity a stable hf:// URI, and emits both the
+// records and the edges between them.
+//
+// The spec lives in ~/notes/Spec/3001.
 package hf
 
 import (
-	"context"
-	"fmt"
-	"io"
-	"net/http"
-	"regexp"
+	"encoding/json"
 	"strings"
 	"time"
 )
 
-// DefaultUserAgent identifies the client to hf. A real, honest
-// User-Agent is both polite and the thing most likely to keep you unblocked.
-const DefaultUserAgent = "hf/dev (+https://github.com/tamnd/hf-cli)"
+// Host is the site this client talks to.
+const Host = "huggingface.co"
 
-// Host is the site this client talks to, and the host the URI driver in
-// domain.go claims. The scaffold points it at hf.com; change it once you
-// know the real endpoints you want to read.
-const Host = "hf.com"
-
-// BaseURL is the root every request is built from.
+// BaseURL is the root every hub request is built from.
 const BaseURL = "https://" + Host
 
-// Client talks to hf over HTTP.
-type Client struct {
-	HTTP      *http.Client
-	UserAgent string
-	// Rate is the minimum gap between requests. Zero means no pacing.
-	Rate    time.Duration
-	Retries int
+// ViewerURL is the dataset-viewer service. It is a separate host with its own
+// API, and several dataset endpoints exist only there.
+const ViewerURL = "https://datasets-server.huggingface.co"
 
-	last time.Time
-}
+// Scheme is the URI scheme for hub resources: hf://model/owner/name.
+const Scheme = "hf"
 
-// NewClient returns a Client with sensible defaults: a 30s timeout, a 200ms
-// minimum gap between requests, and five retries on transient errors.
-func NewClient() *Client {
-	return &Client{
-		HTTP:      &http.Client{Timeout: 30 * time.Second},
-		UserAgent: DefaultUserAgent,
-		Rate:      200 * time.Millisecond,
-		Retries:   5,
-	}
-}
+// DefaultUserAgent identifies the client. An honest User-Agent is both polite
+// and the thing most likely to keep you unblocked.
+const DefaultUserAgent = "hf-cli/dev (+https://github.com/tamnd/hf-cli)"
 
-// Get fetches url and returns the response body. It paces and retries according
-// to the client's settings. The caller owns nothing extra; the body is read
-// fully and closed here.
-func (c *Client) Get(ctx context.Context, url string) ([]byte, error) {
-	var lastErr error
-	for attempt := 0; attempt <= c.Retries; attempt++ {
-		if attempt > 0 {
-			select {
-			case <-ctx.Done():
-				return nil, ctx.Err()
-			case <-time.After(backoff(attempt)):
-			}
-		}
-		body, retry, err := c.do(ctx, url)
-		if err == nil {
-			return body, nil
-		}
-		lastErr = err
-		if !retry {
-			return nil, err
-		}
-	}
-	return nil, fmt.Errorf("get %s: %w", url, lastErr)
-}
-
-func (c *Client) do(ctx context.Context, url string) (body []byte, retry bool, err error) {
-	c.pace()
-	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
-	if err != nil {
-		return nil, false, err
-	}
-	req.Header.Set("User-Agent", c.UserAgent)
-
-	resp, err := c.HTTP.Do(req)
-	if err != nil {
-		return nil, true, err
-	}
-	defer func() { _ = resp.Body.Close() }()
-
-	if resp.StatusCode == http.StatusTooManyRequests || resp.StatusCode >= 500 {
-		return nil, true, fmt.Errorf("http %d", resp.StatusCode)
-	}
-	if resp.StatusCode != http.StatusOK {
-		return nil, false, fmt.Errorf("http %d", resp.StatusCode)
-	}
-
-	b, err := io.ReadAll(resp.Body)
-	if err != nil {
-		return nil, true, err
-	}
-	return b, false, nil
-}
-
-// pace blocks until at least Rate has passed since the previous request.
-func (c *Client) pace() {
-	if c.Rate <= 0 {
-		return
-	}
-	if wait := c.Rate - time.Since(c.last); wait > 0 {
-		time.Sleep(wait)
-	}
-	c.last = time.Now()
-}
-
-func backoff(attempt int) time.Duration {
-	d := time.Duration(attempt) * 500 * time.Millisecond
-	if d > 5*time.Second {
-		d = 5 * time.Second
-	}
-	return d
-}
-
-// Page is the scaffold's one example record: a single page, addressed by the
-// path that names it on hf.com. It is a stand-in for the typed records you
-// will model from the real hf endpoints. The kit struct tags make it
-// addressable as a resource URI (see domain.go): ID is the URI id, and Body is
-// the long text `hf cat` and the Markdown export print.
-type Page struct {
-	ID    string `json:"id" kit:"id"`
-	URL   string `json:"url"`
-	Title string `json:"title,omitempty"`
-	Body  string `json:"body,omitempty" kit:"body"`
-}
-
-// GetPage fetches one page by its path (for example "wiki/Go") and returns it as
-// a record. The scaffold keeps a plain-text preview of the response as the body;
-// replace the parsing with the real fields once you know the endpoint's shape.
-func (c *Client) GetPage(ctx context.Context, path string) (*Page, error) {
-	path = strings.Trim(path, "/")
-	url := BaseURL + "/" + path
-	body, err := c.Get(ctx, url)
-	if err != nil {
-		return nil, err
-	}
-	return &Page{ID: path, URL: url, Title: path, Body: pageText(body)}, nil
-}
-
-// PageLinks fetches a page and returns the same-host pages it links to, as page
-// stubs. It shows the member-listing pattern the URI driver relies on: every
-// stub carries enough (an id and a URL) to be addressed and followed on its own.
-func (c *Client) PageLinks(ctx context.Context, path string, limit int) ([]*Page, error) {
-	path = strings.Trim(path, "/")
-	body, err := c.Get(ctx, BaseURL+"/"+path)
-	if err != nil {
-		return nil, err
-	}
-	var out []*Page
-	seen := map[string]bool{}
-	for _, p := range linkPaths(body) {
-		if seen[p] {
-			continue
-		}
-		seen[p] = true
-		out = append(out, &Page{ID: p, URL: BaseURL + "/" + p})
-		if limit > 0 && len(out) >= limit {
-			break
-		}
-	}
-	return out, nil
-}
-
-var (
-	hrefRE = regexp.MustCompile(`href="(/[^":#?]+)"`)
-	tagRE  = regexp.MustCompile(`<[^>]+>`)
+// The entity kinds. Every URI names one of these, and the set is closed: a new
+// kind means a new constant here, a Locate case, and a Classify rule.
+const (
+	KindModel      = "model"
+	KindDataset    = "dataset"
+	KindSpace      = "space"
+	KindKernel     = "kernel"
+	KindUser       = "user"
+	KindOrg        = "org"
+	KindNamespace  = "namespace" // a name we know is one of user or org, but not which
+	KindCollection = "collection"
+	KindPaper      = "paper"
+	KindPost       = "post"
+	KindBlog       = "blog"
+	KindDiscussion = "discussion"
+	KindCommit     = "commit"
+	KindRef        = "ref"
+	KindFile       = "file"
+	KindTag        = "tag"
+	KindTask       = "task"
+	KindSplit      = "split"
+	KindProvider   = "provider"
 )
 
-// linkPaths pulls the relative link targets out of an HTML response, so a list
-// op can turn each into an addressable page stub.
-func linkPaths(body []byte) []string {
-	var out []string
-	for _, m := range hrefRE.FindAllSubmatch(body, -1) {
-		if p := strings.Trim(string(m[1]), "/"); p != "" {
-			out = append(out, p)
-		}
-	}
-	return out
+// RepoKinds are the four kinds that live at /{owner}/{name} and share the Repo
+// shape.
+var RepoKinds = []string{KindModel, KindDataset, KindSpace, KindKernel}
+
+// Meta is embedded in every record. It is the part of a record hf adds rather
+// than reads, and it is what makes a record addressable and auditable.
+type Meta struct {
+	// URI is the canonical hf:// address, and the store's primary key.
+	URI string `json:"uri" kit:"id"`
+	// URL is where the entity lives on the web.
+	URL string `json:"url,omitempty"`
+	// Kind is one of the Kind constants.
+	Kind string `json:"kind,omitempty"`
+	// Sources lists every URL that contributed a field to this record, so a
+	// surprising value can always be traced back to what said it.
+	Sources []string `json:"sources,omitempty"`
+	// FetchedAt is when the record was assembled.
+	FetchedAt time.Time `json:"fetchedAt,omitzero"`
+	// AliasOf is the id the caller asked for, when it differed from the
+	// canonical one. Asking for bert-base-uncased yields a record whose id is
+	// google-bert/bert-base-uncased and whose aliasOf is what was typed.
+	AliasOf string `json:"aliasOf,omitempty"`
+	// Extra holds every field the upstream response carried that this version
+	// of hf does not model. It stays raw so a large integer survives the round
+	// trip, and it is never dropped, because a field hf has not seen is exactly
+	// the field worth noticing.
+	Extra map[string]json.RawMessage `json:"extra,omitempty"`
 }
 
-// pageText reduces an HTML response to a short plain-text preview, a stand-in
-// for the typed extract a real endpoint would hand you.
-func pageText(body []byte) string {
-	s := strings.Join(strings.Fields(tagRE.ReplaceAllString(string(body), " ")), " ")
-	if len(s) > 500 {
-		s = s[:500]
+// setMeta fills the computed fields. Every constructor and decode path ends
+// here, so no record escapes without an address.
+func (m *Meta) setMeta(kind, id string, sources ...string) {
+	m.Kind = kind
+	m.URI = URI(kind, id)
+	if u, err := Locate(kind, id); err == nil {
+		m.URL = u
 	}
-	return s
+	if m.FetchedAt.IsZero() {
+		m.FetchedAt = time.Now().UTC()
+	}
+	for _, s := range sources {
+		m.addSource(s)
+	}
+}
+
+// addSource records one contributing URL, skipping duplicates so a merge of
+// several fetches does not repeat itself.
+func (m *Meta) addSource(url string) {
+	if url == "" {
+		return
+	}
+	for _, s := range m.Sources {
+		if s == url {
+			return
+		}
+	}
+	m.Sources = append(m.Sources, url)
+}
+
+// Gated is the repo access state: not gated, or gated with automatic or manual
+// approval. Upstream sends false, "auto", or "manual" in the same field, so the
+// type decodes from a bool or a string.
+type Gated string
+
+// The gate states.
+const (
+	NotGated    Gated = ""
+	GatedAuto   Gated = "auto"
+	GatedManual Gated = "manual"
+)
+
+// UnmarshalJSON accepts false, true, "auto", and "manual".
+func (g *Gated) UnmarshalJSON(b []byte) error {
+	s := strings.Trim(string(b), `"`)
+	switch s {
+	case "false", "null", "":
+		*g = NotGated
+	case "true":
+		*g = GatedAuto
+	default:
+		*g = Gated(s)
+	}
+	return nil
+}
+
+// IsGated reports whether the repo requires approval.
+func (g Gated) IsGated() bool { return g != NotGated }
+
+// StringList decodes a value that is either a scalar string or a list of
+// strings. Card authors write `license: mit` and `license: [mit]` for the same
+// key, sometimes in the same repository, and both are valid on the hub, so a
+// parser that accepts only one form fails on a large share of real repos.
+type StringList []string
+
+// UnmarshalJSON accepts a string, a list of strings, or null.
+func (s *StringList) UnmarshalJSON(b []byte) error {
+	b = trimSpace(b)
+	if len(b) == 0 || string(b) == "null" {
+		return nil
+	}
+	if b[0] == '[' {
+		var list []any
+		if err := jsonUnmarshal(b, &list); err != nil {
+			return err
+		}
+		out := make([]string, 0, len(list))
+		for _, v := range list {
+			if str, ok := stringOf(v); ok && str != "" {
+				out = append(out, str)
+			}
+		}
+		*s = out
+		return nil
+	}
+	var one any
+	if err := jsonUnmarshal(b, &one); err != nil {
+		return err
+	}
+	if str, ok := stringOf(one); ok && str != "" {
+		*s = StringList{str}
+	}
+	return nil
 }
