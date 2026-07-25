@@ -1,0 +1,13 @@
+{
+  "url": "https://huggingface.co/api/organizations/google-bert/overview",
+  "status": 200,
+  "header": {
+    "Content-Type": [
+      "application/json; charset=utf-8"
+    ],
+    "ETag": [
+      "W/\"1ff-9H4Z1LoUWzzmr0bNrewxjjiCTCQ\""
+    ]
+  },
+  "body": "api_organizations_google-bert_overview-0c0b02ba.body.json"
+}

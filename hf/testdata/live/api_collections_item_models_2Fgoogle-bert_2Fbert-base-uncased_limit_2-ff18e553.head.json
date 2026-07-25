@@ -1,0 +1,16 @@
+{
+  "url": "https://huggingface.co/api/collections?item=models%2Fgoogle-bert%2Fbert-base-uncased\u0026limit=2",
+  "status": 200,
+  "header": {
+    "Content-Type": [
+      "application/json; charset=utf-8"
+    ],
+    "ETag": [
+      "W/\"17f4-YVHDnSy1+MiJGobQvQtwVmkyyyU\""
+    ],
+    "Link": [
+      "\u003chttps://huggingface.co/api/collections?item=models%2Fgoogle-bert%2Fbert-base-uncased\u0026sort=trending\u0026expand=true\u0026limit=2\u0026cursor=NmE1MGZmZDFkNmI2N2M5NWEzMGRmOTdmLTA%3D\u003e; rel=\"next\""
+    ]
+  },
+  "body": "api_collections_item_models_2Fgoogle-bert_2Fbert-base-uncased_limit_2-ff18e553.body.json"
+}

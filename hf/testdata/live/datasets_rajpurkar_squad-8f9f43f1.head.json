@@ -1,0 +1,13 @@
+{
+  "url": "https://huggingface.co/datasets/rajpurkar/squad",
+  "status": 200,
+  "header": {
+    "Content-Type": [
+      "text/html; charset=utf-8"
+    ],
+    "ETag": [
+      "W/\"ba92d-/V43rrmFmB3/TlDRTnFKASQOQlk\""
+    ]
+  },
+  "body": "datasets_rajpurkar_squad-8f9f43f1.body.html"
+}

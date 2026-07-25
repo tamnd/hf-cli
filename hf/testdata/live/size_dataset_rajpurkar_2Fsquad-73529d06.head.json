@@ -1,0 +1,10 @@
+{
+  "url": "https://datasets-server.huggingface.co/size?dataset=rajpurkar%2Fsquad",
+  "status": 200,
+  "header": {
+    "Content-Type": [
+      "application/json"
+    ]
+  },
+  "body": "size_dataset_rajpurkar_2Fsquad-73529d06.body.json"
+}

@@ -1,0 +1,13 @@
+{
+  "url": "https://huggingface.co/api/datasets/rajpurkar/squad/parquet",
+  "status": 200,
+  "header": {
+    "Content-Type": [
+      "application/json; charset=utf-8"
+    ],
+    "ETag": [
+      "W/\"e0-gsqTcLLsXPt40YCOfJmKnfU7YIk\""
+    ]
+  },
+  "body": "api_datasets_rajpurkar_squad_parquet-664bbbf3.body.json"
+}

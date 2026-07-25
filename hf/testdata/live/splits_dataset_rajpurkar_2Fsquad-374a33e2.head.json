@@ -1,0 +1,10 @@
+{
+  "url": "https://datasets-server.huggingface.co/splits?dataset=rajpurkar%2Fsquad",
+  "status": 200,
+  "header": {
+    "Content-Type": [
+      "application/json"
+    ]
+  },
+  "body": "splits_dataset_rajpurkar_2Fsquad-374a33e2.body.json"
+}

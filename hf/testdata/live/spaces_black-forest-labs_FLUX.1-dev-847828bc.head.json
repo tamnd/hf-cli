@@ -1,0 +1,16 @@
+{
+  "url": "https://huggingface.co/spaces/black-forest-labs/FLUX.1-dev",
+  "status": 200,
+  "header": {
+    "Content-Type": [
+      "text/html; charset=utf-8"
+    ],
+    "ETag": [
+      "W/\"d4f0-YdystjTNdV2+ZuWqkIc+KeFowV4\""
+    ],
+    "Link": [
+      "\u003chttps://huggingface.co/spaces/black-forest-labs/FLUX.1-dev/embed/gradio_api/openapi.json\u003e; rel=\"service-desc\"; type=\"application/json\""
+    ]
+  },
+  "body": "spaces_black-forest-labs_FLUX.1-dev-847828bc.body.html"
+}

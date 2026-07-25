@@ -27,8 +27,18 @@ func NewApp() *kit.App {
 	id := hf.Domain{}.Info().Identity
 	id.Version = Version
 
-	app := kit.New(id)
+	// WithDefaults is how the hub's own baseline reaches the resolved config: a
+	// request every 150ms, five retries, eight workers. Without it the run would
+	// use the framework's more conservative numbers and every command would be
+	// slower for no reason.
+	app := kit.New(id, kit.WithDefaults(hf.Defaults))
 	(hf.Domain{}).Register(app)
+
 	app.AddCommand(newVersionCmd())
+	app.AddCommand(newCatCmd())
+	app.AddCommand(newReadmeCmd())
+	app.AddCommand(newRDFCmd())
+	app.AddCommand(newCroissantCmd())
+	app.AddCommand(newExportCmd())
 	return app
 }

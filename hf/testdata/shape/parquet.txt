@@ -1,0 +1,10 @@
+config string
+dataset string
+fetchedAt string
+filename string
+index number
+kind string
+sources[] string
+split string
+uri string
+url string

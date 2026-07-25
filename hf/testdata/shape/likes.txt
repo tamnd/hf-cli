@@ -1,0 +1,11 @@
+createdAt string
+fetchedAt string
+kind string
+repo.name string
+repo.type string
+repo.uri string
+repo.url string
+sources[] string
+uri string
+url string
+user string

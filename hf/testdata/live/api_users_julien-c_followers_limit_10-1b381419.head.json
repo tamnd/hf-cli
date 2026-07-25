@@ -1,0 +1,16 @@
+{
+  "url": "https://huggingface.co/api/users/julien-c/followers?limit=10",
+  "status": 200,
+  "header": {
+    "Content-Type": [
+      "application/json; charset=utf-8"
+    ],
+    "ETag": [
+      "W/\"6de-3dHQDyF6ZGz41JKSecox9PSKbgM\""
+    ],
+    "Link": [
+      "\u003chttps://huggingface.co/api/users/julien-c/followers?limit=10\u0026cursor=6a60fd2594a0c90fc3f868e0\u003e; rel=\"next\""
+    ]
+  },
+  "body": "api_users_julien-c_followers_limit_10-1b381419.body.json"
+}

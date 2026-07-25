@@ -1,0 +1,9 @@
+config string
+dataset string
+fetchedAt string
+kind string
+sources[] string
+split string
+status string
+uri string
+url string

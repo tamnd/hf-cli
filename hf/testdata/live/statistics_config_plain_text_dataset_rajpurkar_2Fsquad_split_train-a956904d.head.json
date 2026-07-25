@@ -1,0 +1,10 @@
+{
+  "url": "https://datasets-server.huggingface.co/statistics?config=plain_text\u0026dataset=rajpurkar%2Fsquad\u0026split=train",
+  "status": 200,
+  "header": {
+    "Content-Type": [
+      "application/json"
+    ]
+  },
+  "body": "statistics_config_plain_text_dataset_rajpurkar_2Fsquad_split_train-a956904d.body.json"
+}

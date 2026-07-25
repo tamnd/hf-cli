@@ -1,0 +1,13 @@
+{
+  "url": "https://huggingface.co/api/papers/1810.04805",
+  "status": 200,
+  "header": {
+    "Content-Type": [
+      "application/json; charset=utf-8"
+    ],
+    "ETag": [
+      "W/\"1a7c-CidfYQ1NsTPg+S1Vd94rzEGrdBk\""
+    ]
+  },
+  "body": "api_papers_1810.04805-3784a812.body.json"
+}

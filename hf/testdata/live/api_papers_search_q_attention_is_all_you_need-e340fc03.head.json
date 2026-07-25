@@ -1,0 +1,13 @@
+{
+  "url": "https://huggingface.co/api/papers/search?q=attention+is+all+you+need",
+  "status": 200,
+  "header": {
+    "Content-Type": [
+      "application/json; charset=utf-8"
+    ],
+    "ETag": [
+      "W/\"7224b-kS6wu+EkPH59VwdvN9rgWmZ9tSs\""
+    ]
+  },
+  "body": "api_papers_search_q_attention_is_all_you_need-e340fc03.body.json"
+}

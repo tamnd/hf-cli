@@ -1,0 +1,13 @@
+{
+  "url": "https://huggingface.co/api/models/Anant-083/isl-sign-language-detector?expand%5B%5D=author\u0026expand%5B%5D=baseModels\u0026expand%5B%5D=cardData\u0026expand%5B%5D=config\u0026expand%5B%5D=createdAt\u0026expand%5B%5D=disabled\u0026expand%5B%5D=downloads\u0026expand%5B%5D=downloadsAllTime\u0026expand%5B%5D=evalResults\u0026expand%5B%5D=gated\u0026expand%5B%5D=inference\u0026expand%5B%5D=inferenceProviderMapping\u0026expand%5B%5D=lastModified\u0026expand%5B%5D=library_name\u0026expand%5B%5D=likes\u0026expand%5B%5D=mask_token\u0026expand%5B%5D=model-index\u0026expand%5B%5D=pipeline_tag\u0026expand%5B%5D=private\u0026expand%5B%5D=safetensors\u0026expand%5B%5D=sha\u0026expand%5B%5D=siblings\u0026expand%5B%5D=spaces\u0026expand%5B%5D=tags\u0026expand%5B%5D=transformersInfo\u0026expand%5B%5D=trendingScore\u0026expand%5B%5D=widgetData\u0026expand%5B%5D=gguf\u0026expand%5B%5D=resourceGroup\u0026expand%5B%5D=xetEnabled\u0026expand%5B%5D=childrenModelCount\u0026expand%5B%5D=usedStorage",
+  "status": 200,
+  "header": {
+    "Content-Type": [
+      "application/json; charset=utf-8"
+    ],
+    "ETag": [
+      "W/\"28c-nAH57MU8jX/Xid/qV/eA0BVaFFU\""
+    ]
+  },
+  "body": "api_models_Anant-083_isl-sign-language-detector_expand_5B_5D_author_expand_5B_5D_baseModel-745ee158.body.json"
+}

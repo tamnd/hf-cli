@@ -1,0 +1,13 @@
+{
+  "url": "https://huggingface.co/api/trending?limit=3",
+  "status": 200,
+  "header": {
+    "Content-Type": [
+      "application/json; charset=utf-8"
+    ],
+    "ETag": [
+      "W/\"1e5f-ikCWHS6K90oz0U0UEusy/fQ0tnc\""
+    ]
+  },
+  "body": "api_trending_limit_3-011a355d.body.json"
+}

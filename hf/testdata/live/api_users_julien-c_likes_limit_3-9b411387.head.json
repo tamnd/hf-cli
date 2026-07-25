@@ -1,0 +1,16 @@
+{
+  "url": "https://huggingface.co/api/users/julien-c/likes?limit=3",
+  "status": 200,
+  "header": {
+    "Content-Type": [
+      "application/json; charset=utf-8"
+    ],
+    "ETag": [
+      "W/\"cc-E2ZAzU8gk6B1Hg4dkaPx4LEWSIQ\""
+    ],
+    "Link": [
+      "\u003chttps://huggingface.co/api/users/julien-c/likes?limit=3\u0026cursor=6a5faaf7f292dd47881ed91d\u003e; rel=\"next\""
+    ]
+  },
+  "body": "api_users_julien-c_likes_limit_3-9b411387.body.json"
+}

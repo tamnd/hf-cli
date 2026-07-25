@@ -1,0 +1,13 @@
+{
+  "url": "https://huggingface.co/google",
+  "status": 200,
+  "header": {
+    "Content-Type": [
+      "text/html; charset=utf-8"
+    ],
+    "ETag": [
+      "W/\"aa6ba-J3TywmPbKRaLO8fxa/hBZCf01wA\""
+    ]
+  },
+  "body": "google-be9b162e.body.html"
+}

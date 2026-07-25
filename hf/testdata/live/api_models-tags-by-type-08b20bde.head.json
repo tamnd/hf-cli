@@ -1,0 +1,13 @@
+{
+  "url": "https://huggingface.co/api/models-tags-by-type",
+  "status": 200,
+  "header": {
+    "Content-Type": [
+      "application/json; charset=utf-8"
+    ],
+    "ETag": [
+      "W/\"82a19-OLi3q5By3KmI81Tloh6NMyHyINU\""
+    ]
+  },
+  "body": "api_models-tags-by-type-08b20bde.body.json"
+}

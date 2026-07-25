@@ -1,0 +1,17 @@
+_id string
+author string
+createdAt string
+downloads number
+fetchedAt string
+id string
+kind string
+likes number
+name string
+private bool
+repoType string
+sources[] string
+supportedDriverFamilies[] string
+tags[] string
+trendingScore number
+uri string
+url string

@@ -1,0 +1,13 @@
+{
+  "url": "https://huggingface.co/api/users/julien-c/overview",
+  "status": 200,
+  "header": {
+    "Content-Type": [
+      "application/json; charset=utf-8"
+    ],
+    "ETag": [
+      "W/\"38c4-gMOFRxLjLslebbVPLWKtGD9EdgQ\""
+    ]
+  },
+  "body": "api_users_julien-c_overview-1082fc3f.body.json"
+}

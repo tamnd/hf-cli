@@ -1,0 +1,13 @@
+{
+  "url": "https://huggingface.co/api/models/google-bert/bert-base-uncased/discussions?limit=3",
+  "status": 200,
+  "header": {
+    "Content-Type": [
+      "application/json; charset=utf-8"
+    ],
+    "ETag": [
+      "W/\"7ab6-haOEi5R1ESOV9hrLexzPNyTu/CY\""
+    ]
+  },
+  "body": "api_models_google-bert_bert-base-uncased_discussions_limit_3-a4abbc9a.body.json"
+}

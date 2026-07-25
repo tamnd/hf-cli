@@ -1,0 +1,13 @@
+{
+  "url": "https://huggingface.co/sitemap-models.xml",
+  "status": 200,
+  "header": {
+    "Content-Type": [
+      "application/xml"
+    ],
+    "ETag": [
+      "\"655fd9b31a988a5773ea3daf1d3f8805\""
+    ]
+  },
+  "body": "sitemap-models.xml-6450417a.body.xml"
+}

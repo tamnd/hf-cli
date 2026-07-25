@@ -1,0 +1,16 @@
+{
+  "url": "https://huggingface.co/api/models/google-bert/bert-base-uncased/commits/main?limit=3",
+  "status": 200,
+  "header": {
+    "Content-Type": [
+      "application/json; charset=utf-8"
+    ],
+    "ETag": [
+      "W/\"598-5jg/OKf/UWwvm+C6zfMXzqZSXDk\""
+    ],
+    "Link": [
+      "\u003chttps://huggingface.co/api/models/google-bert/bert-base-uncased/commits/main?p=1\u0026limit=3\u003e; rel=\"next\""
+    ]
+  },
+  "body": "api_models_google-bert_bert-base-uncased_commits_main_limit_3-6029cec7.body.json"
+}

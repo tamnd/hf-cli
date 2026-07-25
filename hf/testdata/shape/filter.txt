@@ -1,0 +1,15 @@
+config string
+dataset string
+fetchedAt string
+kind string
+row.answers.answer_start[] number
+row.answers.text[] string
+row.context string
+row.id string
+row.question string
+row.title string
+row_idx number
+sources[] string
+split string
+uri string
+url string

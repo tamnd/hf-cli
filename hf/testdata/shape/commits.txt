@@ -1,0 +1,14 @@
+authors[].avatar string
+authors[].uri string
+authors[].user string
+date string
+fetchedAt string
+id string
+kind string
+message string
+repoId string
+repoType string
+sources[] string
+title string
+uri string
+url string

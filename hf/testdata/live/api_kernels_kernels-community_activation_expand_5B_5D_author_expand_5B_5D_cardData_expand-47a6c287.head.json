@@ -1,0 +1,13 @@
+{
+  "url": "https://huggingface.co/api/kernels/kernels-community/activation?expand%5B%5D=author\u0026expand%5B%5D=cardData\u0026expand%5B%5D=createdAt\u0026expand%5B%5D=downloads\u0026expand%5B%5D=downloadsAllTime\u0026expand%5B%5D=gated\u0026expand%5B%5D=lastModified\u0026expand%5B%5D=likes\u0026expand%5B%5D=private\u0026expand%5B%5D=sha\u0026expand%5B%5D=siblings\u0026expand%5B%5D=tags\u0026expand%5B%5D=trendingScore",
+  "status": 200,
+  "header": {
+    "Content-Type": [
+      "application/json; charset=utf-8"
+    ],
+    "ETag": [
+      "W/\"2c2-sxhmwIJuEju3x1TnW2eIhmwpOxI\""
+    ]
+  },
+  "body": "api_kernels_kernels-community_activation_expand_5B_5D_author_expand_5B_5D_cardData_expand-47a6c287.body.json"
+}

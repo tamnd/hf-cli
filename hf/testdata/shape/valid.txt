@@ -1,0 +1,11 @@
+dataset string
+fetchedAt string
+filter bool
+kind string
+preview bool
+search bool
+sources[] string
+statistics bool
+uri string
+url string
+viewer bool

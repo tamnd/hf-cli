@@ -1,0 +1,13 @@
+{
+  "url": "https://huggingface.co/google-bert/bert-base-uncased",
+  "status": 200,
+  "header": {
+    "Content-Type": [
+      "text/html; charset=utf-8"
+    ],
+    "ETag": [
+      "W/\"3d679-QTVyk4/18e8+wVWVuGxMXhcTpUo\""
+    ]
+  },
+  "body": "google-bert_bert-base-uncased-b40e89a1.body.html"
+}

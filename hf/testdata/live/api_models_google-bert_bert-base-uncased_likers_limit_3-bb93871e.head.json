@@ -1,0 +1,13 @@
+{
+  "url": "https://huggingface.co/api/models/google-bert/bert-base-uncased/likers?limit=3",
+  "status": 200,
+  "header": {
+    "Content-Type": [
+      "application/json; charset=utf-8"
+    ],
+    "ETag": [
+      "W/\"7a26d-GpH4fU1yXE8ei/iFmYCpg9BXHIg\""
+    ]
+  },
+  "body": "api_models_google-bert_bert-base-uncased_likers_limit_3-bb93871e.body.json"
+}

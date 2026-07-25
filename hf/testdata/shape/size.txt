@@ -1,0 +1,14 @@
+config string
+dataset string
+fetchedAt string
+kind string
+level string
+num_bytes_memory number
+num_bytes_original_files number
+num_bytes_parquet_files number
+num_columns number
+num_rows number
+sources[] string
+split string
+uri string
+url string

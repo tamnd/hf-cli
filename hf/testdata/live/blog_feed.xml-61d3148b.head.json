@@ -1,0 +1,13 @@
+{
+  "url": "https://huggingface.co/blog/feed.xml",
+  "status": 200,
+  "header": {
+    "Content-Type": [
+      "application/rss+xml; charset=utf-8"
+    ],
+    "ETag": [
+      "W/\"3bb5a-+2C+pfv9JRy4adKXi+B0VbAv4FY\""
+    ]
+  },
+  "body": "blog_feed.xml-61d3148b.body.xml"
+}

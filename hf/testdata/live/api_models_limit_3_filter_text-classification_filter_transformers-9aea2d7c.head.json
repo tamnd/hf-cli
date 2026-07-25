@@ -1,0 +1,16 @@
+{
+  "url": "https://huggingface.co/api/models?limit=3\u0026filter=text-classification\u0026filter=transformers",
+  "status": 200,
+  "header": {
+    "Content-Type": [
+      "application/json; charset=utf-8"
+    ],
+    "ETag": [
+      "W/\"633-uYWgf+kDHlZs7MfPwn2kp2+XFDk\""
+    ],
+    "Link": [
+      "\u003chttps://huggingface.co/api/models?limit=3\u0026filter=text-classification\u0026filter=transformers\u0026cursor=eyIkb3IiOlt7InRyZW5kaW5nU2NvcmUiOjQsIl9pZCI6eyIkZ3QiOiI2ODBmMmI1M2JiYjJhZjYzZGU4MzkwMTAifX0seyJ0cmVuZGluZ1Njb3JlIjp7IiRsdCI6NH19LHsidHJlbmRpbmdTY29yZSI6bnVsbH1dLCJzZWFyY2hTZXF1ZW5jZVRva2VuIjoiQ09Mcmp3SWFDU0VBQUFBQUFBQVFRQm9PV2d4b0R5dFR1N0t2WTk2RGtCQWlEbG9NYUE4clU3dXlyMlBlZzVBUSJ9\u003e; rel=\"next\""
+    ]
+  },
+  "body": "api_models_limit_3_filter_text-classification_filter_transformers-9aea2d7c.body.json"
+}

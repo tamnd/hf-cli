@@ -1,0 +1,7 @@
+fetchedAt string
+id string
+kind string
+label string
+type string
+uri string
+url string

@@ -1,28 +1,31 @@
 ---
 title: "Quick start"
-description: "Fetch your first record with hf."
+description: "Read your first record, then walk the graph."
 weight: 30
 ---
 
-Once `hf` is on your `PATH`, fetch a page. The argument is the path
-of the page on hf.com (everything after the host), or a full URL:
+Once `hf` is on your `PATH`, read a model:
 
 ```bash
-hf page <path>
+hf model google-bert/bert-base-uncased
 ```
 
-By default you get an aligned table. Ask for JSON when you want to pipe it:
+The argument is a ref, and every command that takes one accepts every form of
+it. A bare name, an owner-qualified id, a URL you copied out of a browser, and a
+canonical URI are all the same command:
 
 ```bash
-$ hf page <path> -o json
-[
-  {
-    "id": "<path>",
-    "url": "https://hf.com/<path>",
-    "title": "<path>",
-    "body": "..."
-  }
-]
+hf model bert-base-uncased
+hf model google-bert/bert-base-uncased
+hf model https://huggingface.co/google-bert/bert-base-uncased
+hf model hf://model/google-bert/bert-base-uncased
+```
+
+If you do not know what kind of thing a ref is, `hf get` works it out:
+
+```bash
+hf get rajpurkar/squad
+hf get https://huggingface.co/collections/fdtn-ai/antares-6a5804c889e78b51c447c38a
 ```
 
 ## Shape the output
@@ -30,9 +33,9 @@ $ hf page <path> -o json
 The same flags work on every command:
 
 ```bash
-hf page <path> --fields id,url        # keep only these columns
-hf page <path> --template '{{.Body}}' # just the body text
-hf page <path> -o jsonl | jq .url     # one object per line, into jq
+hf model google-bert/bert-base-uncased --fields id,downloads,likes,pipeline_tag
+hf model google-bert/bert-base-uncased -o json | jq .safetensors
+hf models --author google -o url | head -5
 ```
 
 `-o` takes `table`, `json`, `jsonl`, `csv`, `tsv`, `url`, or `raw`. Left to
@@ -40,16 +43,55 @@ hf page <path> -o jsonl | jq .url     # one object per line, into jq
 command reads well by hand and parses cleanly downstream. See
 [output formats](/reference/output/) for the full contract.
 
-## Follow the links
-
-`links` lists the pages a page links to, and each one is a path you can fetch in
-turn:
+## List and search
 
 ```bash
-hf links <path> -n 10                 # the first ten links
-hf links <path> -o url                # just the URLs
-hf links <path> -o url | head -3 | xargs -n1 hf page
+hf models --author google --task text-generation --sort downloads -n 20
+hf datasets --search squad -n 10
+hf search bert                     # every entity kind at once
+hf trending --type model
 ```
+
+Listing streams. `-n` stops early without fetching the next page, and leaving it
+off means the whole result set, which for `hf models` is a few million records
+and a very long afternoon.
+
+## Go deeper
+
+The API does not return everything the page shows. `--deep` fetches the rendered
+page as well and merges the fields only it carries:
+
+```bash
+hf model google-bert/bert-base-uncased --deep -o json | jq .tagObjs
+hf org google --deep -o json | jq '.models | length'
+```
+
+`--card` adds the README body, and `hf card` gives you just the parsed front
+matter.
+
+## Walk the graph
+
+Every record knows what it points at:
+
+```bash
+hf graph google-bert/bert-base-uncased        # the node and its edges
+hf edges google-bert/bert-base-uncased        # edges only
+hf children google-bert/bert-base-uncased     # what was fine-tuned from it
+hf crawl hf://org/google --depth 2 -n 500
+```
+
+See [walk the graph](/guides/graph/) for what the edges mean and where each one
+comes from.
+
+## Export it
+
+```bash
+hf rdf google-bert/bert-base-uncased --format ttl
+hf export hf://org/google --depth 2 --format jsonl > google.jsonl
+hf croissant rajpurkar/squad
+```
+
+See [linked data](/guides/linked-data/) for the vocabulary.
 
 ## Serve it instead
 
@@ -57,15 +99,13 @@ The same operations are available over HTTP and to agents over MCP:
 
 ```bash
 hf serve --addr :7777 &
-curl -s 'localhost:7777/v1/page/<path>'          # NDJSON, one record per line
-hf mcp                                # MCP over stdio: page, links
+curl -s 'localhost:7777/v1/model/google-bert/bert-base-uncased'   # NDJSON
+hf mcp                                                            # MCP over stdio
 ```
 
-## What to build next
+## Where to go next
 
-This scaffold ships one example type, `page`, wired end to end so the whole
-chain works today. To make it really about hf, model the records you
-care about in `hf/` and declare their operations in
-`hf/domain.go`. Each one you add shows up as a command here, a route
-under `serve`, and a tool under `mcp`, with no extra wiring. The
-[guides](/guides/) cover the common jobs.
+- [Walk the graph](/guides/graph/)
+- [Export linked data](/guides/linked-data/)
+- [Read a dataset](/guides/datasets/)
+- [The CLI reference](/reference/cli/)
