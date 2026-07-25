@@ -20,6 +20,8 @@ hf rdf   google-bert/bert-base-uncased --format ttl
 
 Output adapts to where it goes: an aligned table on your terminal, JSONL the moment you pipe it somewhere.
 
+![hf reading a model, listing an org, showing a dataset schema, printing graph edges, and emitting schema.org triples](/demo.gif)
+
 ## What makes it different
 
 - **Nothing is dropped.** Every record type sweeps the fields it does not model into an `extra` map, and the test suite fails when one shows up.
