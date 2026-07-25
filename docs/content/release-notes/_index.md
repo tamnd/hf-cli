@@ -9,9 +9,11 @@ What shipped in each release, newest first.
 Every tagged version builds the same set of artifacts: archives for Linux, macOS, Windows, and FreeBSD, Linux packages (deb, rpm, apk), a multi-arch container image on GHCR, and entries for the package managers.
 Binaries are pure Go, so there is nothing to install alongside them.
 
-## v0.1.0
+## v0.2.0
 
-First release. hf reads huggingface.co and gives back records rather than pages.
+First release of the rewrite.
+hf reads huggingface.co and gives back records rather than pages.
+The version starts at 0.2.0 because v0.1.0 belongs to the earlier daily-papers tool and is already published in the Go checksum database, where a tag cannot be moved.
 
 **Records.** Every entity the hub publishes has a typed record carrying every field its source returned: model, dataset, space, kernel, user, org, collection, paper, post, blog entry, discussion, commit, ref, file, tag, task, split, and inference provider.
 Each record has a canonical `hf://` address and lists the URLs that contributed to it, so a surprising value can be traced back to whatever said it.

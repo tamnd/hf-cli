@@ -5,9 +5,12 @@ The format follows [Keep a Changelog](https://keepachangelog.com/), and the proj
 
 ## [Unreleased]
 
-## [0.1.0] - 2026-07-25
+## [0.2.0] - 2026-07-25
 
-First release. hf reads huggingface.co and gives back records rather than pages.
+First release of the rewrite.
+hf reads huggingface.co and gives back records rather than pages.
+
+The version starts at 0.2.0 because v0.1.0 was tagged on the earlier daily-papers tool and is already published in the Go checksum database, where a tag cannot be moved.
 
 ### Added
 
@@ -26,5 +29,5 @@ First release. hf reads huggingface.co and gives back records rather than pages.
 - A client that paces itself, retries on 429 and 5xx honouring `Retry-After`, caches on disk, paginates over the `Link` header, and maps every failure to a distinct exit code.
 - Release artifacts: archives for Linux, macOS, Windows, and FreeBSD, deb, rpm and apk packages, a multi-arch GHCR image, SBOMs, and a cosign-signed checksum file.
 
-[Unreleased]: https://github.com/tamnd/hf-cli/compare/v0.1.0...HEAD
-[0.1.0]: https://github.com/tamnd/hf-cli/releases/tag/v0.1.0
+[Unreleased]: https://github.com/tamnd/hf-cli/compare/v0.2.0...HEAD
+[0.2.0]: https://github.com/tamnd/hf-cli/releases/tag/v0.2.0
