@@ -1,0 +1,13 @@
+{
+  "url": "https://huggingface.co/api/collections/fdtn-ai/antares-6a5804c889e78b51c447c38a",
+  "status": 200,
+  "header": {
+    "Content-Type": [
+      "application/json; charset=utf-8"
+    ],
+    "ETag": [
+      "W/\"819-+K1WwoiMDRdfaB/6HKbnkPdKwn0\""
+    ]
+  },
+  "body": "api_collections_fdtn-ai_antares-6a5804c889e78b51c447c38a-28b55872.body.json"
+}

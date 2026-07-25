@@ -1,0 +1,7 @@
+_id string
+avatarUrl string
+fullname string
+name string
+type string
+uri string
+url string

@@ -1,0 +1,10 @@
+kind string
+label string
+literal bool
+object string
+objectKind string
+predicate string
+source string
+subject string
+uri string
+url string

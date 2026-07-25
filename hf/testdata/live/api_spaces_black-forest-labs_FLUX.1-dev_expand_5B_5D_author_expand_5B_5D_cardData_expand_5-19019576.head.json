@@ -1,0 +1,13 @@
+{
+  "url": "https://huggingface.co/api/spaces/black-forest-labs/FLUX.1-dev?expand%5B%5D=author\u0026expand%5B%5D=cardData\u0026expand%5B%5D=createdAt\u0026expand%5B%5D=datasets\u0026expand%5B%5D=disabled\u0026expand%5B%5D=lastModified\u0026expand%5B%5D=likes\u0026expand%5B%5D=models\u0026expand%5B%5D=private\u0026expand%5B%5D=runtime\u0026expand%5B%5D=sdk\u0026expand%5B%5D=sha\u0026expand%5B%5D=siblings\u0026expand%5B%5D=subdomain\u0026expand%5B%5D=tags\u0026expand%5B%5D=trendingScore\u0026expand%5B%5D=resourceGroup\u0026expand%5B%5D=xetEnabled\u0026expand%5B%5D=usedStorage",
+  "status": 200,
+  "header": {
+    "Content-Type": [
+      "application/json; charset=utf-8"
+    ],
+    "ETag": [
+      "W/\"4a2-XnD3JQkbiBL9xggLfBL9DCl6qss\""
+    ]
+  },
+  "body": "api_spaces_black-forest-labs_FLUX.1-dev_expand_5B_5D_author_expand_5B_5D_cardData_expand_5-19019576.body.json"
+}

@@ -1,0 +1,16 @@
+{
+  "url": "https://huggingface.co/api/collections?limit=2",
+  "status": 200,
+  "header": {
+    "Content-Type": [
+      "application/json; charset=utf-8"
+    ],
+    "ETag": [
+      "W/\"1a16-OzK0mRczxky5mCPt5PC/Cx56HOg\""
+    ],
+    "Link": [
+      "\u003chttps://huggingface.co/api/collections?sort=trending\u0026expand=true\u0026limit=2\u0026cursor=NmE0ODUyNjE0MTM5YjZmZmNiYTY1MGJlLTM1\u003e; rel=\"next\""
+    ]
+  },
+  "body": "api_collections_limit_2-b2cbab2a.body.json"
+}

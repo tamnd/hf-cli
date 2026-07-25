@@ -1,0 +1,16 @@
+{
+  "url": "https://huggingface.co/api/models?limit=3\u0026filter=base_model%3Afinetune%3Agoogle-bert%2Fbert-base-uncased",
+  "status": 200,
+  "header": {
+    "Content-Type": [
+      "application/json; charset=utf-8"
+    ],
+    "ETag": [
+      "W/\"709-AdElxmjPxoq4odchv2RlEEftHS0\""
+    ],
+    "Link": [
+      "\u003chttps://huggingface.co/api/models?limit=3\u0026filter=base_model%3Afinetune%3Agoogle-bert%2Fbert-base-uncased\u0026cursor=eyIkb3IiOlt7InRyZW5kaW5nU2NvcmUiOjAsIl9pZCI6eyIkZ3QiOiI2MjFmZmRjMDM2NDY4ZDcwOWYxNzYxOGMifX0seyJ0cmVuZGluZ1Njb3JlIjp7IiRsdCI6MH19LHsidHJlbmRpbmdTY29yZSI6bnVsbH1dLCJzZWFyY2hTZXF1ZW5jZVRva2VuIjoiQ0pPbWdBSWFDU0VBQUFBQUFBQUFBQm9PV2d4aUgvM0FOa2FOY0o4WFlZd2lEbG9NWWgvOXdEWkdqWENmRjJHTSJ9\u003e; rel=\"next\""
+    ]
+  },
+  "body": "api_models_limit_3_filter_base_model_3Afinetune_3Agoogle-bert_2Fbert-base-uncased-f5fc0ce6.body.json"
+}

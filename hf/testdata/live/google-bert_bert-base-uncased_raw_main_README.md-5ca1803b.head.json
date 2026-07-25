@@ -1,0 +1,16 @@
+{
+  "url": "https://huggingface.co/google-bert/bert-base-uncased/raw/main/README.md",
+  "status": 200,
+  "header": {
+    "Content-Type": [
+      "text/plain; charset=utf-8"
+    ],
+    "ETag": [
+      "W/\"40a2aaca31dd005eb5f6ffad07b5ffed0a31d1f6\""
+    ],
+    "X-Repo-Commit": [
+      "86b5e0934494bd15c9632b12f734a8a67f723594"
+    ]
+  },
+  "body": "google-bert_bert-base-uncased_raw_main_README.md-5ca1803b.body"
+}

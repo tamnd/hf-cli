@@ -1,0 +1,8 @@
+_id string
+avatarUrl string
+fullname string
+isPro bool
+name string
+type string
+uri string
+url string

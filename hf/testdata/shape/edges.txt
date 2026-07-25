@@ -1,0 +1,6 @@
+literal bool
+object string
+objectKind string
+predicate string
+source string
+subject string

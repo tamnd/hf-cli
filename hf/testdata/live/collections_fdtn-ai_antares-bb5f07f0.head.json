@@ -1,0 +1,13 @@
+{
+  "url": "https://huggingface.co/collections/fdtn-ai/antares",
+  "status": 200,
+  "header": {
+    "Content-Type": [
+      "text/html; charset=utf-8"
+    ],
+    "ETag": [
+      "W/\"1711d-HOogUtcTvZQntMxzuqf2e6eQf1Y\""
+    ]
+  },
+  "body": "collections_fdtn-ai_antares-bb5f07f0.body.html"
+}

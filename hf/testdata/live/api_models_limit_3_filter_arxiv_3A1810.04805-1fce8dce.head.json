@@ -1,0 +1,16 @@
+{
+  "url": "https://huggingface.co/api/models?limit=3\u0026filter=arxiv%3A1810.04805",
+  "status": 200,
+  "header": {
+    "Content-Type": [
+      "application/json; charset=utf-8"
+    ],
+    "ETag": [
+      "W/\"7fd-jdddoijjMK2uUk0eBs90J2rfHNI\""
+    ],
+    "Link": [
+      "\u003chttps://huggingface.co/api/models?limit=3\u0026filter=arxiv%3A1810.04805\u0026cursor=eyIkb3IiOlt7InRyZW5kaW5nU2NvcmUiOjEsIl9pZCI6eyIkZ3QiOiI2MjFmZmRjMDM2NDY4ZDcwOWYxNzQzMzYifX0seyJ0cmVuZGluZ1Njb3JlIjp7IiRsdCI6MX19LHsidHJlbmRpbmdTY29yZSI6bnVsbH1dLCJzZWFyY2hTZXF1ZW5jZVRva2VuIjoiQ0plL2h3SWFDU0VBQUFBQUFBRHdQeG9PV2d4aUgvM0FOa2FOY0o4WFF6WWlEbG9NWWgvOXdEWkdqWENmRjBNMiJ9\u003e; rel=\"next\""
+    ]
+  },
+  "body": "api_models_limit_3_filter_arxiv_3A1810.04805-1fce8dce.body.json"
+}

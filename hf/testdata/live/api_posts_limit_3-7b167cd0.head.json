@@ -1,0 +1,13 @@
+{
+  "url": "https://huggingface.co/api/posts?limit=3",
+  "status": 200,
+  "header": {
+    "Content-Type": [
+      "application/json; charset=utf-8"
+    ],
+    "ETag": [
+      "W/\"ceca-aT+3JH4eyC1RsgDkaEsyRua/UvE\""
+    ]
+  },
+  "body": "api_posts_limit_3-7b167cd0.body.json"
+}

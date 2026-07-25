@@ -1,0 +1,7 @@
+fetchedAt string
+kind string
+lastmod string
+loc string
+sources[] string
+uri string
+url string

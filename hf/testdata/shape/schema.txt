@@ -1,0 +1,12 @@
+class string
+dtype string
+feature_idx number
+name string
+type._type string
+type.answer_start._type string
+type.answer_start.feature._type string
+type.answer_start.feature.dtype string
+type.dtype string
+type.text._type string
+type.text.feature._type string
+type.text.feature.dtype string

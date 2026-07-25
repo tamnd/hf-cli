@@ -1,0 +1,13 @@
+{
+  "url": "https://huggingface.co/api/models/google-bert/bert-base-uncased/paths-info/main",
+  "status": 200,
+  "header": {
+    "Content-Type": [
+      "application/json; charset=utf-8"
+    ],
+    "ETag": [
+      "W/\"6f8-Vxw7vfPApWRs7SyLPvbj/ptxPgY\""
+    ]
+  },
+  "body": "api_models_google-bert_bert-base-uncased_paths-info_main-e212bf80.body.json"
+}

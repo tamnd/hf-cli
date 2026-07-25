@@ -1,0 +1,13 @@
+{
+  "url": "https://huggingface.co/api/datasets/rajpurkar/squad?expand%5B%5D=author\u0026expand%5B%5D=cardData\u0026expand%5B%5D=citation\u0026expand%5B%5D=createdAt\u0026expand%5B%5D=disabled\u0026expand%5B%5D=description\u0026expand%5B%5D=downloads\u0026expand%5B%5D=downloadsAllTime\u0026expand%5B%5D=gated\u0026expand%5B%5D=lastModified\u0026expand%5B%5D=likes\u0026expand%5B%5D=mainSize\u0026expand%5B%5D=paperswithcode_id\u0026expand%5B%5D=private\u0026expand%5B%5D=siblings\u0026expand%5B%5D=sha\u0026expand%5B%5D=tags\u0026expand%5B%5D=trendingScore\u0026expand%5B%5D=resourceGroup\u0026expand%5B%5D=xetEnabled\u0026expand%5B%5D=usedStorage",
+  "status": 200,
+  "header": {
+    "Content-Type": [
+      "application/json; charset=utf-8"
+    ],
+    "ETag": [
+      "W/\"bf7-5S5nX/8qzjOALjl42I5nKH9WFHU\""
+    ]
+  },
+  "body": "api_datasets_rajpurkar_squad_expand_5B_5D_author_expand_5B_5D_cardData_expand_5B_5D_citati-6dcacc19.body.json"
+}

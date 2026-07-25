@@ -1,0 +1,10 @@
+_id string
+fetchedAt string
+id string
+kind string
+label string
+sources[] string
+trendingWeight number
+type string
+uri string
+url string

@@ -1,0 +1,6 @@
+fetchedAt string
+id string
+input string
+kind string
+uri string
+url string

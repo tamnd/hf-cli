@@ -1,0 +1,1 @@
+{"splits":[{"dataset":"rajpurkar/squad","config":"plain_text","split":"train"},{"dataset":"rajpurkar/squad","config":"plain_text","split":"validation"}],"pending":[],"failed":[]}

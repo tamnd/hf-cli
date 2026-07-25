@@ -1,0 +1,16 @@
+{
+  "url": "https://huggingface.co/api/spaces?limit=3",
+  "status": 200,
+  "header": {
+    "Content-Type": [
+      "application/json; charset=utf-8"
+    ],
+    "ETag": [
+      "W/\"2aa-Uzuf5vHXTp/ZkajVkRdIpS6RZK4\""
+    ],
+    "Link": [
+      "\u003chttps://huggingface.co/api/spaces?limit=3\u0026cursor=eyIkb3IiOlt7InRyZW5kaW5nU2NvcmUiOjc2LCJfaWQiOnsiJGd0IjoiNmE0NzAwYmIzYWI5YzY0ZTk5ZTQ5ZGRlIn19LHsidHJlbmRpbmdTY29yZSI6eyIkbHQiOjc2fX0seyJ0cmVuZGluZ1Njb3JlIjpudWxsfV19\u003e; rel=\"next\""
+    ]
+  },
+  "body": "api_spaces_limit_3-af0e63a8.body.json"
+}

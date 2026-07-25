@@ -1,0 +1,9 @@
+fetchedAt string
+guid string
+kind string
+publishedAt string
+slug string
+sources[] string
+title string
+uri string
+url string

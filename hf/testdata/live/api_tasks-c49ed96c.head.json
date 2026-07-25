@@ -1,0 +1,13 @@
+{
+  "url": "https://huggingface.co/api/tasks",
+  "status": 200,
+  "header": {
+    "Content-Type": [
+      "application/json; charset=utf-8"
+    ],
+    "ETag": [
+      "W/\"15f57-LUkwgIr9EE5DrXy8CG+bkj8ZcYE\""
+    ]
+  },
+  "body": "api_tasks-c49ed96c.body.json"
+}

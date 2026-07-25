@@ -1,0 +1,13 @@
+{
+  "url": "https://huggingface.co/api/datasets/rajpurkar/squad/croissant",
+  "status": 200,
+  "header": {
+    "Content-Type": [
+      "application/json; charset=utf-8"
+    ],
+    "ETag": [
+      "W/\"133e-qDzuY3ck/1XL1LASD9BVM72dFEI\""
+    ]
+  },
+  "body": "api_datasets_rajpurkar_squad_croissant-3876ed88.body.json"
+}

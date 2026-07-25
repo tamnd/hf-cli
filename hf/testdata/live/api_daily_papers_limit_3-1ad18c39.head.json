@@ -1,0 +1,16 @@
+{
+  "url": "https://huggingface.co/api/daily_papers?limit=3",
+  "status": 200,
+  "header": {
+    "Content-Type": [
+      "application/json; charset=utf-8"
+    ],
+    "ETag": [
+      "W/\"40d2-CW9zx71U3GdERBNc93Vvt6gA8vo\""
+    ],
+    "Link": [
+      "\u003chttps://huggingface.co/api/daily_papers?limit=3\u0026p=1\u003e; rel=\"next\""
+    ]
+  },
+  "body": "api_daily_papers_limit_3-1ad18c39.body.json"
+}

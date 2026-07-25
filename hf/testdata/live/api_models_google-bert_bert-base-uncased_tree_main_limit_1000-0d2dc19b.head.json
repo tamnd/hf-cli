@@ -1,0 +1,13 @@
+{
+  "url": "https://huggingface.co/api/models/google-bert/bert-base-uncased/tree/main?limit=1000",
+  "status": 200,
+  "header": {
+    "Content-Type": [
+      "application/json; charset=utf-8"
+    ],
+    "ETag": [
+      "W/\"a1c-50C4XQn5qNQNqbQDRaGdf7mZd48\""
+    ]
+  },
+  "body": "api_models_google-bert_bert-base-uncased_tree_main_limit_1000-0d2dc19b.body.json"
+}

@@ -1,0 +1,10 @@
+{
+  "url": "https://datasets-server.huggingface.co/is-valid?dataset=rajpurkar%2Fsquad",
+  "status": 200,
+  "header": {
+    "Content-Type": [
+      "application/json"
+    ]
+  },
+  "body": "is-valid_dataset_rajpurkar_2Fsquad-fee45ce0.body.json"
+}

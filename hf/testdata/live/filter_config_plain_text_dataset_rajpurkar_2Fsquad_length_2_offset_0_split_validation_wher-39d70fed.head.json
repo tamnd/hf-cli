@@ -1,0 +1,10 @@
+{
+  "url": "https://datasets-server.huggingface.co/filter?config=plain_text\u0026dataset=rajpurkar%2Fsquad\u0026length=2\u0026offset=0\u0026split=validation\u0026where=%22title%22%3D%27Super_Bowl_50%27",
+  "status": 200,
+  "header": {
+    "Content-Type": [
+      "application/json"
+    ]
+  },
+  "body": "filter_config_plain_text_dataset_rajpurkar_2Fsquad_length_2_offset_0_split_validation_wher-39d70fed.body.json"
+}

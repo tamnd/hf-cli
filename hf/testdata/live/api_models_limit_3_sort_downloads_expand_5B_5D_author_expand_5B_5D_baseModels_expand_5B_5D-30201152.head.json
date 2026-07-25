@@ -1,0 +1,16 @@
+{
+  "url": "https://huggingface.co/api/models?limit=3\u0026sort=downloads\u0026expand%5B%5D=author\u0026expand%5B%5D=baseModels\u0026expand%5B%5D=cardData\u0026expand%5B%5D=config\u0026expand%5B%5D=createdAt\u0026expand%5B%5D=disabled\u0026expand%5B%5D=downloads\u0026expand%5B%5D=downloadsAllTime\u0026expand%5B%5D=evalResults\u0026expand%5B%5D=gated\u0026expand%5B%5D=inference\u0026expand%5B%5D=inferenceProviderMapping\u0026expand%5B%5D=lastModified\u0026expand%5B%5D=library_name\u0026expand%5B%5D=likes\u0026expand%5B%5D=mask_token\u0026expand%5B%5D=model-index\u0026expand%5B%5D=pipeline_tag\u0026expand%5B%5D=private\u0026expand%5B%5D=safetensors\u0026expand%5B%5D=sha\u0026expand%5B%5D=siblings\u0026expand%5B%5D=spaces\u0026expand%5B%5D=tags\u0026expand%5B%5D=transformersInfo\u0026expand%5B%5D=trendingScore\u0026expand%5B%5D=widgetData\u0026expand%5B%5D=gguf\u0026expand%5B%5D=resourceGroup\u0026expand%5B%5D=xetEnabled",
+  "status": 200,
+  "header": {
+    "Content-Type": [
+      "application/json; charset=utf-8"
+    ],
+    "ETag": [
+      "W/\"266e-bTu0kTZtJswf4lvGksLazpaJqJU\""
+    ],
+    "Link": [
+      "\u003chttps://huggingface.co/api/models?limit=3\u0026sort=downloads\u0026expand=author\u0026expand=baseModels\u0026expand=cardData\u0026expand=config\u0026expand=createdAt\u0026expand=disabled\u0026expand=downloads\u0026expand=downloadsAllTime\u0026expand=evalResults\u0026expand=gated\u0026expand=inference\u0026expand=inferenceProviderMapping\u0026expand=lastModified\u0026expand=library_name\u0026expand=likes\u0026expand=mask_token\u0026expand=model-index\u0026expand=pipeline_tag\u0026expand=private\u0026expand=safetensors\u0026expand=sha\u0026expand=siblings\u0026expand=spaces\u0026expand=tags\u0026expand=transformersInfo\u0026expand=trendingScore\u0026expand=widgetData\u0026expand=gguf\u0026expand=resourceGroup\u0026expand=xetEnabled\u0026cursor=eyIkb3IiOlt7ImRvd25sb2FkcyI6ODczMDgxNTAsIl9pZCI6eyIkZ3QiOiI2MjFmZmRjMTM2NDY4ZDcwOWYxN2EyMGUifX0seyJkb3dubG9hZHMiOnsiJGx0Ijo4NzMwODE1MH19LHsiZG93bmxvYWRzIjpudWxsfV19\u003e; rel=\"next\""
+    ]
+  },
+  "body": "api_models_limit_3_sort_downloads_expand_5B_5D_author_expand_5B_5D_baseModels_expand_5B_5D-30201152.body.json"
+}

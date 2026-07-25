@@ -1,0 +1,10 @@
+fetchedAt string
+kind string
+name string
+ref string
+repoId string
+repoType string
+sources[] string
+targetCommit string
+uri string
+url string

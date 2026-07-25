@@ -1,0 +1,14 @@
+@context
+@type
+alternateName
+conformsTo
+creator
+description
+distribution
+hf:graph
+keywords
+license
+name
+recordSet
+sameAs
+url
