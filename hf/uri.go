@@ -147,8 +147,9 @@ func classifyURL(raw string) (kind, id string, err error) {
 		return "", "", errs.Usage("no entity in %q", raw)
 	}
 	kind = KindModel
+	prefixed := false
 	if k, ok := pathKind[seg[0]]; ok {
-		kind, seg = k, seg[1:]
+		kind, seg, prefixed = k, seg[1:], true
 	}
 	switch kind {
 	case KindPaper:
@@ -173,12 +174,18 @@ func classifyURL(raw string) (kind, id string, err error) {
 		return KindCollection, seg[0] + "/" + seg[1], nil
 	}
 
-	// What is left is a repo path, possibly with a sub-page after it.
+	// What is left is a repo path, possibly with a sub-page after it. One
+	// segment under an explicit kind prefix is a canonical repo, the way squad
+	// and glue and imdb are datasets with no owner. One segment with no prefix
+	// is a namespace, since /google is an org page and not a repo.
 	if len(seg) == 1 {
 		if reservedPaths[seg[0]] {
 			return "", "", errs.Usage("%q is a site path, not an entity", raw)
 		}
-		return KindNamespace, seg[0], nil
+		if !prefixed {
+			return KindNamespace, seg[0], nil
+		}
+		return kind, seg[0], nil
 	}
 	repo := seg[0] + "/" + seg[1]
 	rest := seg[2:]
