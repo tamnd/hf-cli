@@ -184,7 +184,7 @@ Recording is anonymous, so the fixtures are what any reader sees.
 Push a version tag and GitHub Actions runs GoReleaser, which builds the archives, Linux packages, the multi-arch GHCR image, checksums, SBOMs, and a cosign signature:
 
 ```bash
-git tag -a v0.1.0 -m "v0.1.0"
+git tag -a v0.2.0 -m "v0.2.0"
 git push --tags
 ```
 
