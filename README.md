@@ -13,15 +13,16 @@ No API key for public data, nothing to run alongside it.
 ## Install
 
 ```bash
-go install github.com/tamnd/hf-cli/cmd/hf@latest
+go install github.com/tamnd/hf-cli/cmd/hf@latest   # Go
+brew install --cask tamnd/tap/hf                   # macOS
+scoop bucket add tamnd https://github.com/tamnd/scoop-bucket && scoop install hf
+docker run --rm ghcr.io/tamnd/hf:latest --help     # container
 ```
 
-Or grab a prebuilt binary from the [releases](https://github.com/tamnd/hf-cli/releases), or run
-the container image:
-
-```bash
-docker run --rm ghcr.io/tamnd/hf:latest --help
-```
+Or grab a prebuilt binary from the
+[releases](https://github.com/tamnd/hf-cli/releases). Linux has a signed apt and
+dnf repository, covered in the
+[install docs](https://tamnd.github.io/hf-cli/getting-started/installation/).
 
 ## Read one thing
 
@@ -204,12 +205,14 @@ archives, Linux packages, the multi-arch GHCR image, checksums, SBOMs, and a
 cosign signature:
 
 ```bash
-git tag v0.1.0
+git tag -a v0.1.0 -m "v0.1.0"
 git push --tags
 ```
 
-The Homebrew and Scoop steps self-disable until their tokens exist, so the first
-release works with no extra secrets.
+The Homebrew and Scoop steps self-disable until their tokens exist, so a release
+works with no extra secrets. Record what changed in
+[CHANGELOG.md](CHANGELOG.md) and on the release notes page in `docs/` before
+tagging.
 
 ## License
 
