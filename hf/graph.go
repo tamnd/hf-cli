@@ -15,24 +15,24 @@ import (
 // Node is one entity in the graph. Props carries the small set of attributes
 // worth having inline, and the full record is one hf call away by URI.
 type Node struct {
-	URI   string         `json:"uri" kit:"id"`
-	Kind  string         `json:"kind"`
-	Label string         `json:"label,omitempty"`
-	URL   string         `json:"url,omitempty"`
-	Props map[string]any `json:"props,omitempty"`
+	URI   string         `json:"uri" kit:"id" table:"uri"`
+	Kind  string         `json:"kind" table:"kind"`
+	Label string         `json:"label,omitempty" table:"label,truncate"`
+	URL   string         `json:"url,omitempty" table:"-,url"`
+	Props map[string]any `json:"props,omitempty" table:"-"`
 }
 
 // Edge is one directed, typed relation. Source records how hf knows it, which
 // matters because a tag-derived edge and an API-declared edge deserve different
 // trust.
 type Edge struct {
-	Subject    string         `json:"subject"`
-	Predicate  string         `json:"predicate"`
-	Object     string         `json:"object"`
-	ObjectKind string         `json:"objectKind,omitempty"`
-	Literal    bool           `json:"literal,omitempty"`
-	Source     string         `json:"source"`
-	Props      map[string]any `json:"props,omitempty"`
+	Subject    string         `json:"subject" table:"subject"`
+	Predicate  string         `json:"predicate" table:"predicate"`
+	Object     string         `json:"object" table:"object"`
+	ObjectKind string         `json:"objectKind,omitempty" table:"objectKind"`
+	Literal    bool           `json:"literal,omitempty" table:"-"`
+	Source     string         `json:"source" table:"source"`
+	Props      map[string]any `json:"props,omitempty" table:"-"`
 }
 
 // The edge sources, in descending order of who asserted the claim. An edge from

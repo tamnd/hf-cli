@@ -96,6 +96,16 @@ func Classify(input string) (kind, id string, err error) {
 		return KindPaper, s, nil
 	}
 	parts := strings.Split(strings.Trim(s, "/"), "/")
+	// A path with the site's own kind prefix on the front, which is what you get
+	// from copying a URL path and what the API's own item filters use. A single
+	// segment is still a namespace, so an account called datasets keeps working;
+	// a repo owned by an account with a kind's name does not, and the prefix
+	// reading is the one everybody means.
+	if len(parts) > 1 {
+		if _, ok := pathKind[parts[0]]; ok {
+			return classifyURL(BaseURL + "/" + strings.Trim(s, "/"))
+		}
+	}
 	switch len(parts) {
 	case 1:
 		if reservedPaths[parts[0]] {

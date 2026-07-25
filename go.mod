@@ -3,7 +3,7 @@ module github.com/tamnd/hf-cli
 go 1.26
 
 require (
-	github.com/tamnd/any-cli v0.2.0
+	github.com/tamnd/any-cli v0.4.4
 	golang.org/x/net v0.57.0
 	sigs.k8s.io/yaml v1.6.0
 )

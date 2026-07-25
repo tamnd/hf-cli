@@ -15,12 +15,12 @@ import (
 type Validity struct {
 	Meta
 
-	Dataset    string `json:"dataset"`
-	Preview    bool   `json:"preview"`
-	Viewer     bool   `json:"viewer"`
-	Search     bool   `json:"search"`
-	Filter     bool   `json:"filter"`
-	Statistics bool   `json:"statistics"`
+	Dataset    string `json:"dataset" table:"dataset"`
+	Preview    bool   `json:"preview" table:"preview"`
+	Viewer     bool   `json:"viewer" table:"viewer"`
+	Search     bool   `json:"search" table:"search"`
+	Filter     bool   `json:"filter" table:"filter"`
+	Statistics bool   `json:"statistics" table:"statistics"`
 }
 
 // UnmarshalJSON decodes the known fields and sweeps the rest into Extra.
@@ -38,11 +38,11 @@ func (v *Validity) normalize(dataset, sourceURL string) {
 type Split struct {
 	Meta
 
-	Dataset string          `json:"dataset"`
-	Config  string          `json:"config"`
-	Split   string          `json:"split"`
-	Status  string          `json:"status,omitempty"`
-	Error   json.RawMessage `json:"error,omitempty"`
+	Dataset string          `json:"dataset" table:"dataset"`
+	Config  string          `json:"config" table:"config"`
+	Split   string          `json:"split" table:"split"`
+	Status  string          `json:"status,omitempty" table:"status"`
+	Error   json.RawMessage `json:"error,omitempty" table:"-"`
 }
 
 // UnmarshalJSON decodes the known fields and sweeps the rest into Extra.
@@ -61,18 +61,18 @@ func (s *Split) normalize(sourceURL string) {
 type Size struct {
 	Meta
 
-	Level   string `json:"level"`
-	Dataset string `json:"dataset"`
-	Config  string `json:"config,omitempty"`
-	Split   string `json:"split,omitempty"`
+	Level   string `json:"level" table:"level"`
+	Dataset string `json:"dataset" table:"-"`
+	Config  string `json:"config,omitempty" table:"config"`
+	Split   string `json:"split,omitempty" table:"split"`
 
-	NumBytesOriginalFiles int64  `json:"num_bytes_original_files,omitempty"`
-	NumBytesParquetFiles  int64  `json:"num_bytes_parquet_files,omitempty"`
-	NumBytesMemory        int64  `json:"num_bytes_memory,omitempty"`
-	NumRows               int64  `json:"num_rows,omitempty"`
-	NumColumns            int    `json:"num_columns,omitempty"`
-	EstimatedNumRows      *int64 `json:"estimated_num_rows,omitempty"`
-	Partial               bool   `json:"partial,omitempty"`
+	NumBytesOriginalFiles int64  `json:"num_bytes_original_files,omitempty" table:"-"`
+	NumBytesParquetFiles  int64  `json:"num_bytes_parquet_files,omitempty" table:"parquet_bytes"`
+	NumBytesMemory        int64  `json:"num_bytes_memory,omitempty" table:"-"`
+	NumRows               int64  `json:"num_rows,omitempty" table:"rows"`
+	NumColumns            int    `json:"num_columns,omitempty" table:"-"`
+	EstimatedNumRows      *int64 `json:"estimated_num_rows,omitempty" table:"-"`
+	Partial               bool   `json:"partial,omitempty" table:"-"`
 }
 
 // UnmarshalJSON decodes the known fields and sweeps the rest into Extra.
@@ -127,12 +127,12 @@ func (f *Feature) normalize() {
 type Row struct {
 	Meta
 
-	Dataset        string                     `json:"dataset"`
-	Config         string                     `json:"config"`
-	Split          string                     `json:"split"`
-	Index          int64                      `json:"row_idx"`
-	Row            map[string]json.RawMessage `json:"row"`
-	TruncatedCells []string                   `json:"truncated_cells,omitempty"`
+	Dataset        string                     `json:"dataset" table:"-"`
+	Config         string                     `json:"config" table:"-"`
+	Split          string                     `json:"split" table:"-"`
+	Index          int64                      `json:"row_idx" table:"row_idx"`
+	Row            map[string]json.RawMessage `json:"row" table:"row,truncate"`
+	TruncatedCells []string                   `json:"truncated_cells,omitempty" table:"-"`
 }
 
 // UnmarshalJSON decodes the known fields and sweeps the rest into Extra.
@@ -154,27 +154,27 @@ func (r *Row) normalize(dataset, config, split, sourceURL string) {
 type ColumnStats struct {
 	Meta
 
-	Dataset string `json:"dataset"`
-	Config  string `json:"config"`
-	Split   string `json:"split"`
+	Dataset string `json:"dataset" table:"-"`
+	Config  string `json:"config" table:"-"`
+	Split   string `json:"split" table:"-"`
 
-	Column string `json:"column_name"`
-	Type   string `json:"column_type"`
+	Column string `json:"column_name" table:"column"`
+	Type   string `json:"column_type" table:"type"`
 
-	NaNCount      int64            `json:"nan_count,omitempty"`
-	NaNProportion float64          `json:"nan_proportion,omitempty"`
-	Min           *float64         `json:"min,omitempty"`
-	Max           *float64         `json:"max,omitempty"`
-	Mean          *float64         `json:"mean,omitempty"`
-	Median        *float64         `json:"median,omitempty"`
-	Std           *float64         `json:"std,omitempty"`
-	Histogram     *Histogram       `json:"histogram,omitempty"`
-	Frequencies   map[string]int64 `json:"frequencies,omitempty"`
-	NoLabelCount  int64            `json:"no_label_count,omitempty"`
-	NumDistinct   int64            `json:"n_unique,omitempty"`
-	MinLength     *int64           `json:"min_length,omitempty"`
-	MaxLength     *int64           `json:"max_length,omitempty"`
-	Raw           json.RawMessage  `json:"raw,omitempty"`
+	NaNCount      int64            `json:"nan_count,omitempty" table:"nan"`
+	NaNProportion float64          `json:"nan_proportion,omitempty" table:"-"`
+	Min           *float64         `json:"min,omitempty" table:"-"`
+	Max           *float64         `json:"max,omitempty" table:"-"`
+	Mean          *float64         `json:"mean,omitempty" table:"-"`
+	Median        *float64         `json:"median,omitempty" table:"-"`
+	Std           *float64         `json:"std,omitempty" table:"-"`
+	Histogram     *Histogram       `json:"histogram,omitempty" table:"-"`
+	Frequencies   map[string]int64 `json:"frequencies,omitempty" table:"-"`
+	NoLabelCount  int64            `json:"no_label_count,omitempty" table:"-"`
+	NumDistinct   int64            `json:"n_unique,omitempty" table:"distinct"`
+	MinLength     *int64           `json:"min_length,omitempty" table:"-"`
+	MaxLength     *int64           `json:"max_length,omitempty" table:"-"`
+	Raw           json.RawMessage  `json:"raw,omitempty" table:"-"`
 }
 
 // UnmarshalJSON lifts the nested column_statistics object up to the top level.
@@ -219,12 +219,12 @@ type Histogram struct {
 type ParquetShard struct {
 	Meta
 
-	Dataset  string `json:"dataset"`
-	Config   string `json:"config"`
-	Split    string `json:"split"`
-	Index    int    `json:"index"`
-	Filename string `json:"filename,omitempty"`
-	Size     int64  `json:"size,omitempty"`
+	Dataset  string `json:"dataset" table:"-"`
+	Config   string `json:"config" table:"config"`
+	Split    string `json:"split" table:"split"`
+	Index    int    `json:"index" table:"index"`
+	Filename string `json:"filename,omitempty" table:"filename"`
+	Size     int64  `json:"size,omitempty" table:"size"`
 }
 
 // UnmarshalJSON decodes the known fields and sweeps the rest into Extra. The

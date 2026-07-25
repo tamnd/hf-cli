@@ -8,58 +8,58 @@ import "time"
 type Paper struct {
 	Meta
 
-	ID          string        `json:"id"`
-	Title       string        `json:"title"`
-	Summary     string        `json:"summary,omitempty"`
-	PublishedAt time.Time     `json:"publishedAt,omitzero"`
-	Authors     []PaperAuthor `json:"authors,omitempty"`
+	ID          string        `json:"id" table:"id"`
+	Title       string        `json:"title" table:"title,truncate"`
+	Summary     string        `json:"summary,omitempty" table:"-"`
+	PublishedAt time.Time     `json:"publishedAt,omitzero" table:"published,time"`
+	Authors     []PaperAuthor `json:"authors,omitempty" table:"-"`
 
 	// Daily feed fields.
-	SubmittedOnDailyAt time.Time `json:"submittedOnDailyAt,omitzero"`
-	SubmittedOnDailyBy *UserRef  `json:"submittedOnDailyBy,omitempty"`
-	IsDaily            bool      `json:"isDaily,omitempty"`
+	SubmittedOnDailyAt time.Time `json:"submittedOnDailyAt,omitzero" table:"-"`
+	SubmittedOnDailyBy *UserRef  `json:"submittedOnDailyBy,omitempty" table:"-"`
+	IsDaily            bool      `json:"isDaily,omitempty" table:"-"`
 
 	// Organization is the lab the hub credits for the work. It is the only place
 	// on the site a paper is attributed to an institution rather than to the
 	// people who submitted it.
-	Organization *UserRef `json:"organization,omitempty"`
-	MediaURLs    []string `json:"mediaUrls,omitempty"`
+	Organization *UserRef `json:"organization,omitempty" table:"-"`
+	MediaURLs    []string `json:"mediaUrls,omitempty" table:"-"`
 
 	// GitHubStars is a count the hub scraped, so it lags the repo it describes.
 	// GitHubRepoAddedBy says who linked the repo, and reads "user" rather than a
 	// name when it was the community rather than an author.
-	GitHubStars       int    `json:"githubStars,omitempty"`
-	GitHubRepoAddedBy string `json:"githubRepoAddedBy,omitempty"`
+	GitHubStars       int    `json:"githubStars,omitempty" table:"-"`
+	GitHubRepoAddedBy string `json:"githubRepoAddedBy,omitempty" table:"-"`
 
 	// Page-derived.
-	Upvotes        int           `json:"upvotes,omitempty"`
-	NumComments    int           `json:"numComments,omitempty"`
-	DiscussionID   string        `json:"discussionId,omitempty"`
-	AISummary      string        `json:"ai_summary,omitempty"`
-	AIKeywords     []string      `json:"ai_keywords,omitempty"`
-	AISummaryModel string        `json:"ai_summary_model,omitempty"`
-	MarkdownURL    string        `json:"markdownContentUrl,omitempty"`
-	Upvoters       []UserRef     `json:"upvoters,omitempty"`
-	Comments       []Comment     `json:"comments,omitempty"`
-	LinkedSpaces   []LinkedSpace `json:"linkedSpaces,omitempty"`
-	GitHubRepo     string        `json:"githubRepo,omitempty"`
-	ProjectPage    string        `json:"projectPage,omitempty"`
-	Thumbnail      string        `json:"thumbnail,omitempty"`
+	Upvotes        int           `json:"upvotes,omitempty" table:"upvotes"`
+	NumComments    int           `json:"numComments,omitempty" table:"-"`
+	DiscussionID   string        `json:"discussionId,omitempty" table:"-"`
+	AISummary      string        `json:"ai_summary,omitempty" table:"-"`
+	AIKeywords     []string      `json:"ai_keywords,omitempty" table:"-"`
+	AISummaryModel string        `json:"ai_summary_model,omitempty" table:"-"`
+	MarkdownURL    string        `json:"markdownContentUrl,omitempty" table:"-"`
+	Upvoters       []UserRef     `json:"upvoters,omitempty" table:"-"`
+	Comments       []Comment     `json:"comments,omitempty" table:"-"`
+	LinkedSpaces   []LinkedSpace `json:"linkedSpaces,omitempty" table:"-"`
+	GitHubRepo     string        `json:"githubRepo,omitempty" table:"-"`
+	ProjectPage    string        `json:"projectPage,omitempty" table:"-"`
+	Thumbnail      string        `json:"thumbnail,omitempty" table:"-"`
 
 	// The detail endpoint carries the first page of each linked repo list inline
 	// along with the totals, so one request answers what three searches would and
 	// says how much more there is.
-	LinkedModels     []Model   `json:"linkedModels,omitempty"`
-	LinkedDatasets   []Dataset `json:"linkedDatasets,omitempty"`
-	NumTotalModels   int       `json:"numTotalModels,omitempty"`
-	NumTotalDatasets int       `json:"numTotalDatasets,omitempty"`
-	NumTotalSpaces   int       `json:"numTotalSpaces,omitempty"`
+	LinkedModels     []Model   `json:"linkedModels,omitempty" table:"-"`
+	LinkedDatasets   []Dataset `json:"linkedDatasets,omitempty" table:"-"`
+	NumTotalModels   int       `json:"numTotalModels,omitempty" table:"-"`
+	NumTotalDatasets int       `json:"numTotalDatasets,omitempty" table:"-"`
+	NumTotalSpaces   int       `json:"numTotalSpaces,omitempty" table:"-"`
 
 	// Derived by hf rather than read.
-	ArxivURL string   `json:"arxivUrl,omitempty"`
-	Models   []string `json:"models,omitempty"`
-	Datasets []string `json:"datasets,omitempty"`
-	Spaces   []string `json:"spaces,omitempty"`
+	ArxivURL string   `json:"arxivUrl,omitempty" table:"-"`
+	Models   []string `json:"models,omitempty" table:"-"`
+	Datasets []string `json:"datasets,omitempty" table:"-"`
+	Spaces   []string `json:"spaces,omitempty" table:"-"`
 }
 
 // UnmarshalJSON decodes the known fields and sweeps the rest into Extra.

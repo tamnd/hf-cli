@@ -12,35 +12,35 @@ import (
 type Discussion struct {
 	Meta
 
-	Num           int       `json:"num"`
-	ObjectID      string    `json:"objectId,omitempty"`
-	Title         string    `json:"title"`
-	Status        string    `json:"status"`
-	IsPullRequest bool      `json:"isPullRequest"`
-	CreatedAt     time.Time `json:"createdAt,omitzero"`
-	NumComments   int       `json:"numComments"`
-	Pinned        bool      `json:"pinned,omitempty"`
-	Locked        bool      `json:"locked,omitempty"`
+	Num           int       `json:"num" table:"num"`
+	ObjectID      string    `json:"objectId,omitempty" table:"-"`
+	Title         string    `json:"title" table:"title,truncate"`
+	Status        string    `json:"status" table:"status"`
+	IsPullRequest bool      `json:"isPullRequest" table:"pr"`
+	CreatedAt     time.Time `json:"createdAt,omitzero" table:"created,time"`
+	NumComments   int       `json:"numComments" table:"comments"`
+	Pinned        bool      `json:"pinned,omitempty" table:"-"`
+	Locked        bool      `json:"locked,omitempty" table:"-"`
 
 	// IsReport marks a thread opened through the report button rather than the
 	// new-discussion button, which is the one flag that separates moderation
 	// traffic from ordinary community traffic.
-	IsReport bool `json:"isReport,omitempty"`
+	IsReport bool `json:"isReport,omitempty" table:"-"`
 
-	Author    *UserRef `json:"author,omitempty"`
-	Repo      *RepoRef `json:"repo,omitempty"`
-	RepoOwner *UserRef `json:"repoOwner,omitempty"`
+	Author    *UserRef `json:"author,omitempty" table:"-"`
+	Repo      *RepoRef `json:"repo,omitempty" table:"-"`
+	RepoOwner *UserRef `json:"repoOwner,omitempty" table:"-"`
 
-	TopReactions     []Reaction `json:"topReactions,omitempty"`
-	NumReactionUsers int        `json:"numReactionUsers,omitempty"`
+	TopReactions     []Reaction `json:"topReactions,omitempty" table:"-"`
+	NumReactionUsers int        `json:"numReactionUsers,omitempty" table:"-"`
 
-	Events []DiscussionEvent `json:"events,omitempty"`
+	Events []DiscussionEvent `json:"events,omitempty" table:"-"`
 
 	// Pull request fields.
-	ChangesCount int    `json:"changesCount,omitempty"`
-	TargetBranch string `json:"targetBranch,omitempty"`
-	Conflicting  bool   `json:"conflicting,omitempty"`
-	Diff         string `json:"diff,omitempty"`
+	ChangesCount int    `json:"changesCount,omitempty" table:"-"`
+	TargetBranch string `json:"targetBranch,omitempty" table:"-"`
+	Conflicting  bool   `json:"conflicting,omitempty" table:"-"`
+	Diff         string `json:"diff,omitempty" table:"-"`
 }
 
 // UnmarshalJSON decodes the known fields and sweeps the rest into Extra. The

@@ -19,21 +19,21 @@ import (
 type Page struct {
 	Meta
 
-	Title     string `json:"title,omitempty"`
-	Canonical string `json:"canonical,omitempty"`
+	Title     string `json:"title,omitempty" table:"title,truncate"`
+	Canonical string `json:"canonical,omitempty" table:"-"`
 
 	// Components is the hydration payloads keyed by component name. The value
 	// is a slice because a name can repeat: a blog post carries two
 	// BlogThumbnail blocks, a repo page several CopyButton blocks.
-	Components map[string][]json.RawMessage `json:"components,omitempty"`
+	Components map[string][]json.RawMessage `json:"components,omitempty" table:"components"`
 
 	// LD is every application/ld+json block, and Head is the meta tag set.
-	LD   []json.RawMessage `json:"ld,omitempty"`
-	Head map[string]string `json:"meta,omitempty"`
+	LD   []json.RawMessage `json:"ld,omitempty" table:"-"`
+	Head map[string]string `json:"meta,omitempty" table:"-"`
 
 	// HTML is kept only when the caller asked for the body, because the DOM
 	// path is the one thing that needs it.
-	HTML []byte `json:"-"`
+	HTML []byte `json:"-" table:"-"`
 }
 
 // Component returns the first payload for a name, which is what a record

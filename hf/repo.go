@@ -16,61 +16,61 @@ import (
 type Repo struct {
 	Meta
 
-	ID       string `json:"id"`
-	ObjectID string `json:"_id,omitempty"`
-	Author   string `json:"author,omitempty"`
-	Name     string `json:"name,omitempty"`
-	RepoType string `json:"repoType,omitempty"`
-	SHA      string `json:"sha,omitempty"`
+	ID       string `json:"id" table:"id"`
+	ObjectID string `json:"_id,omitempty" table:"-"`
+	Author   string `json:"author,omitempty" table:"-"`
+	Name     string `json:"name,omitempty" table:"-"`
+	RepoType string `json:"repoType,omitempty" table:"-"`
+	SHA      string `json:"sha,omitempty" table:"-"`
 
-	Private  bool   `json:"private"`
-	Disabled bool   `json:"disabled,omitempty"`
-	Gated    Gated  `json:"gated,omitempty"`
-	Region   string `json:"region,omitempty"`
+	Private  bool   `json:"private" table:"-"`
+	Disabled bool   `json:"disabled,omitempty" table:"-"`
+	Gated    Gated  `json:"gated,omitempty" table:"gated"`
+	Region   string `json:"region,omitempty" table:"-"`
 
-	Likes         int     `json:"likes"`
-	Downloads     int     `json:"downloads"`
-	DownloadsAll  int     `json:"downloadsAllTime,omitempty"`
-	TrendingScore float64 `json:"trendingScore,omitempty"`
-	UsedStorage   int64   `json:"usedStorage,omitempty"`
+	Likes         int     `json:"likes" table:"likes"`
+	Downloads     int     `json:"downloads" table:"downloads"`
+	DownloadsAll  int     `json:"downloadsAllTime,omitempty" table:"-"`
+	TrendingScore float64 `json:"trendingScore,omitempty" table:"-"`
+	UsedStorage   int64   `json:"usedStorage,omitempty" table:"-"`
 
-	CreatedAt    time.Time `json:"createdAt,omitzero"`
-	LastModified time.Time `json:"lastModified,omitzero"`
+	CreatedAt    time.Time `json:"createdAt,omitzero" table:"-"`
+	LastModified time.Time `json:"lastModified,omitzero" table:"modified,time"`
 
-	Tags     []string  `json:"tags,omitempty"`
-	Siblings []Sibling `json:"siblings,omitempty"`
+	Tags     []string  `json:"tags,omitempty" table:"-"`
+	Siblings []Sibling `json:"siblings,omitempty" table:"-"`
 
-	CardData  *Card  `json:"cardData,omitempty"`
-	CardText  string `json:"cardText,omitempty"`
-	CardError string `json:"cardError,omitempty"`
+	CardData  *Card  `json:"cardData,omitempty" table:"-"`
+	CardText  string `json:"cardText,omitempty" table:"-"`
+	CardError string `json:"cardError,omitempty" table:"-"`
 
-	AuthorData    *UserRef       `json:"authorData,omitempty"`
-	XetEnabled    bool           `json:"xetEnabled,omitempty"`
-	ResourceGroup *ResourceGroup `json:"resourceGroup,omitempty"`
+	AuthorData    *UserRef       `json:"authorData,omitempty" table:"-"`
+	XetEnabled    bool           `json:"xetEnabled,omitempty" table:"-"`
+	ResourceGroup *ResourceGroup `json:"resourceGroup,omitempty" table:"-"`
 
 	// IsLikedByUser is relative to the token making the request, so it is always
 	// false for an anonymous read.
-	IsLikedByUser bool `json:"isLikedByUser,omitempty"`
+	IsLikedByUser bool `json:"isLikedByUser,omitempty" table:"-"`
 
 	// Page-derived, present with --deep.
-	CardExists          bool             `json:"cardExists,omitempty"`
-	DiscussionsStats    *DiscussionStats `json:"discussionsStats,omitempty"`
-	DiscussionsDisabled bool             `json:"discussionsDisabled,omitempty"`
-	DiscussionsSorting  string           `json:"discussionsSorting,omitempty"`
-	HasBlockedOIDs      bool             `json:"hasBlockedOids,omitempty"`
-	LicenseFilePath     string           `json:"licenseFilePath,omitempty"`
-	InferenceStatus     string           `json:"inference,omitempty"`
+	CardExists          bool             `json:"cardExists,omitempty" table:"-"`
+	DiscussionsStats    *DiscussionStats `json:"discussionsStats,omitempty" table:"-"`
+	DiscussionsDisabled bool             `json:"discussionsDisabled,omitempty" table:"-"`
+	DiscussionsSorting  string           `json:"discussionsSorting,omitempty" table:"-"`
+	HasBlockedOIDs      bool             `json:"hasBlockedOids,omitempty" table:"-"`
+	LicenseFilePath     string           `json:"licenseFilePath,omitempty" table:"-"`
+	InferenceStatus     string           `json:"inference,omitempty" table:"-"`
 
 	// TagObjs is the typed form of Tags. Only the page carries it, so it is the
 	// one field where the page always wins, and when no page was fetched hf
 	// synthesises it from the raw strings and marks each one derived.
-	TagObjs   []Tag  `json:"tag_objs,omitempty"`
-	Thumbnail string `json:"thumbnail,omitempty"`
+	TagObjs   []Tag  `json:"tag_objs,omitempty" table:"-"`
+	Thumbnail string `json:"thumbnail,omitempty" table:"-"`
 
 	// CardOutline is the README heading tree the page's side navigation renders
 	// from, which is a table of contents nothing else on the hub exposes.
-	CardOutline json.RawMessage `json:"cardOutline,omitempty"`
-	JSONLD      json.RawMessage `json:"jsonld,omitempty"`
+	CardOutline json.RawMessage `json:"cardOutline,omitempty" table:"-"`
+	JSONLD      json.RawMessage `json:"jsonld,omitempty" table:"-"`
 }
 
 // Sibling is one entry of the flat file list. The upstream key is rfilename,
@@ -129,33 +129,33 @@ func (r *Repo) Files() []string {
 type Model struct {
 	Repo
 
-	PipelineTag string `json:"pipeline_tag,omitempty"`
-	Library     string `json:"library_name,omitempty"`
-	MaskToken   string `json:"mask_token,omitempty"`
+	PipelineTag string `json:"pipeline_tag,omitempty" table:"task"`
+	Library     string `json:"library_name,omitempty" table:"library"`
+	MaskToken   string `json:"mask_token,omitempty" table:"-"`
 
-	Config           *ModelConfig      `json:"config,omitempty"`
-	TransformersInfo *TransformersInfo `json:"transformersInfo,omitempty"`
-	Safetensors      *Safetensors      `json:"safetensors,omitempty"`
-	GGUF             *GGUF             `json:"gguf,omitempty"`
+	Config           *ModelConfig      `json:"config,omitempty" table:"-"`
+	TransformersInfo *TransformersInfo `json:"transformersInfo,omitempty" table:"-"`
+	Safetensors      *Safetensors      `json:"safetensors,omitempty" table:"-"`
+	GGUF             *GGUF             `json:"gguf,omitempty" table:"-"`
 
-	ModelIndex  json.RawMessage `json:"model-index,omitempty"`
-	EvalResults []EvalResult    `json:"evalResults,omitempty"`
+	ModelIndex  json.RawMessage `json:"model-index,omitempty" table:"-"`
+	EvalResults []EvalResult    `json:"evalResults,omitempty" table:"-"`
 
-	Spaces             []string           `json:"spaces,omitempty"`
-	BaseModels         BaseModels         `json:"baseModels,omitempty"`
-	ChildrenCount      *ChildCounts       `json:"childrenModelCount,omitempty"`
-	WidgetData         json.RawMessage    `json:"widgetData,omitempty"`
-	InferenceProviders InferenceProviders `json:"inferenceProviderMapping,omitempty"`
+	Spaces             []string           `json:"spaces,omitempty" table:"-"`
+	BaseModels         BaseModels         `json:"baseModels,omitempty" table:"-"`
+	ChildrenCount      *ChildCounts       `json:"childrenModelCount,omitempty" table:"-"`
+	WidgetData         json.RawMessage    `json:"widgetData,omitempty" table:"-"`
+	InferenceProviders InferenceProviders `json:"inferenceProviderMapping,omitempty" table:"-"`
 
 	// Page-derived.
-	LibrariesOther   []string      `json:"librariesOther,omitempty"`
-	IsQuantized      bool          `json:"isQuantized,omitempty"`
-	HasQuantizations bool          `json:"hasQuantizations,omitempty"`
-	LinkedSpaces     []LinkedSpace `json:"linkedSpaces,omitempty"`
-	TrackDownloads   bool          `json:"trackDownloads,omitempty"`
-	ShowHuggingChat  bool          `json:"showHuggingChatEntry,omitempty"`
-	NumParameters    int64         `json:"numParameters,omitempty"`
-	WidgetOutputURLs []string      `json:"widgetOutputUrls,omitempty"`
+	LibrariesOther   []string      `json:"librariesOther,omitempty" table:"-"`
+	IsQuantized      bool          `json:"isQuantized,omitempty" table:"-"`
+	HasQuantizations bool          `json:"hasQuantizations,omitempty" table:"-"`
+	LinkedSpaces     []LinkedSpace `json:"linkedSpaces,omitempty" table:"-"`
+	TrackDownloads   bool          `json:"trackDownloads,omitempty" table:"-"`
+	ShowHuggingChat  bool          `json:"showHuggingChatEntry,omitempty" table:"-"`
+	NumParameters    int64         `json:"numParameters,omitempty" table:"-"`
+	WidgetOutputURLs []string      `json:"widgetOutputUrls,omitempty" table:"-"`
 }
 
 // UnmarshalJSON decodes the known fields and sweeps the rest into Extra. It
@@ -423,42 +423,42 @@ type EvalResult struct {
 type Dataset struct {
 	Repo
 
-	Description      string `json:"description,omitempty"`
-	Citation         string `json:"citation,omitempty"`
-	PaperswithcodeID string `json:"paperswithcode_id,omitempty"`
-	MainSize         int64  `json:"mainSize,omitempty"`
+	Description      string `json:"description,omitempty" table:"-"`
+	Citation         string `json:"citation,omitempty" table:"-"`
+	PaperswithcodeID string `json:"paperswithcode_id,omitempty" table:"-"`
+	MainSize         int64  `json:"mainSize,omitempty" table:"-"`
 
-	TaskCategories      []string `json:"taskCategories,omitempty"`
-	TaskIDs             []string `json:"taskIds,omitempty"`
-	Languages           []string `json:"language,omitempty"`
-	Multilinguality     []string `json:"multilinguality,omitempty"`
-	SizeCategories      []string `json:"sizeCategories,omitempty"`
-	SourceDatasets      []string `json:"sourceDatasets,omitempty"`
-	AnnotationsCreators []string `json:"annotationsCreators,omitempty"`
-	LanguageCreators    []string `json:"languageCreators,omitempty"`
-	PrettyName          string   `json:"prettyName,omitempty"`
+	TaskCategories      []string `json:"taskCategories,omitempty" table:"-"`
+	TaskIDs             []string `json:"taskIds,omitempty" table:"-"`
+	Languages           []string `json:"language,omitempty" table:"-"`
+	Multilinguality     []string `json:"multilinguality,omitempty" table:"-"`
+	SizeCategories      []string `json:"sizeCategories,omitempty" table:"-"`
+	SourceDatasets      []string `json:"sourceDatasets,omitempty" table:"-"`
+	AnnotationsCreators []string `json:"annotationsCreators,omitempty" table:"-"`
+	LanguageCreators    []string `json:"languageCreators,omitempty" table:"-"`
+	PrettyName          string   `json:"prettyName,omitempty" table:"pretty_name"`
 
-	DatasetInfo json.RawMessage `json:"datasetInfo,omitempty"`
-	Configs     []DatasetConfig `json:"configs,omitempty"`
+	DatasetInfo json.RawMessage `json:"datasetInfo,omitempty" table:"-"`
+	Configs     []DatasetConfig `json:"configs,omitempty" table:"-"`
 
 	// ServerInfo is the dataset-viewer summary the hub attaches to a dataset row:
 	// row count, formats, modalities, and whether the viewer works at all. It is
 	// what the viewer commands would otherwise cost a request to learn.
-	ServerInfo *DatasetServerInfo `json:"datasetsServerInfo,omitempty"`
+	ServerInfo *DatasetServerInfo `json:"datasetsServerInfo,omitempty" table:"-"`
 
 	// Page-derived.
-	HasParquetFormat bool          `json:"hasParquetFormat,omitempty"`
-	Libraries        []DatasetLib  `json:"libraries,omitempty"`
-	LinkedSpaces     []LinkedSpace `json:"linkedSpaces,omitempty"`
-	ViewerEnabled    bool          `json:"viewerEnabled,omitempty"`
-	IsTracesDataset  bool          `json:"isTracesDataset,omitempty"`
-	IsBenchmark      bool          `json:"isBenchmark,omitempty"`
-	IsTraces         bool          `json:"isTraces,omitempty"`
+	HasParquetFormat bool          `json:"hasParquetFormat,omitempty" table:"-"`
+	Libraries        []DatasetLib  `json:"libraries,omitempty" table:"-"`
+	LinkedSpaces     []LinkedSpace `json:"linkedSpaces,omitempty" table:"-"`
+	ViewerEnabled    bool          `json:"viewerEnabled,omitempty" table:"-"`
+	IsTracesDataset  bool          `json:"isTracesDataset,omitempty" table:"-"`
+	IsBenchmark      bool          `json:"isBenchmark,omitempty" table:"-"`
+	IsTraces         bool          `json:"isTraces,omitempty" table:"-"`
 
 	// ViewerData is the first page of rows plus the schema, exactly as the page
 	// rendered it. It is one request where the viewer API would be three, so it
 	// is kept whole rather than reshaped.
-	ViewerData json.RawMessage `json:"viewerData,omitempty"`
+	ViewerData json.RawMessage `json:"viewerData,omitempty" table:"-"`
 }
 
 // UnmarshalJSON decodes the known fields and sweeps the rest into Extra. The
@@ -510,20 +510,20 @@ type DatasetLib struct {
 type Space struct {
 	Repo
 
-	SDK       string   `json:"sdk,omitempty"`
-	Subdomain string   `json:"subdomain,omitempty"`
-	Models    []string `json:"models,omitempty"`
-	Datasets  []string `json:"datasets,omitempty"`
-	Runtime   *Runtime `json:"runtime,omitempty"`
+	SDK       string   `json:"sdk,omitempty" table:"sdk"`
+	Subdomain string   `json:"subdomain,omitempty" table:"-"`
+	Models    []string `json:"models,omitempty" table:"-"`
+	Datasets  []string `json:"datasets,omitempty" table:"-"`
+	Runtime   *Runtime `json:"runtime,omitempty" table:"-"`
 
 	// Page-derived.
-	IframeSrc          string `json:"iframeSrc,omitempty"`
-	ShortDescription   string `json:"shortDescription,omitempty"`
-	Emoji              string `json:"emoji,omitempty"`
-	ColorFrom          string `json:"colorFrom,omitempty"`
-	ColorTo            string `json:"colorTo,omitempty"`
-	Pinned             bool   `json:"pinned,omitempty"`
-	ShowGettingStarted bool   `json:"showGettingStarted,omitempty"`
+	IframeSrc          string `json:"iframeSrc,omitempty" table:"-"`
+	ShortDescription   string `json:"shortDescription,omitempty" table:"description,truncate"`
+	Emoji              string `json:"emoji,omitempty" table:"-"`
+	ColorFrom          string `json:"colorFrom,omitempty" table:"-"`
+	ColorTo            string `json:"colorTo,omitempty" table:"-"`
+	Pinned             bool   `json:"pinned,omitempty" table:"-"`
+	ShowGettingStarted bool   `json:"showGettingStarted,omitempty" table:"-"`
 }
 
 // UnmarshalJSON decodes the known fields and sweeps the rest into Extra.
@@ -573,13 +573,13 @@ type SpaceDomain struct {
 type Kernel struct {
 	Repo
 
-	SupportedDriverFamilies []string `json:"supportedDriverFamilies,omitempty"`
-	Variants                []string `json:"variants,omitempty"`
+	SupportedDriverFamilies []string `json:"supportedDriverFamilies,omitempty" table:"-"`
+	Variants                []string `json:"variants,omitempty" table:"-"`
 
 	// TrustedPublisher says the build artefacts came from a verified pipeline
 	// rather than an upload, which for a binary you are about to run in your own
 	// process is the field that matters most on the record.
-	TrustedPublisher bool `json:"trustedPublisher,omitempty"`
+	TrustedPublisher bool `json:"trustedPublisher,omitempty" table:"trusted"`
 }
 
 // UnmarshalJSON decodes the known fields and sweeps the rest into Extra.

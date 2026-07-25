@@ -14,18 +14,63 @@ import (
 type Tag struct {
 	Meta
 
-	ID      string `json:"id"`
-	Label   string `json:"label,omitempty"`
-	Type    string `json:"type,omitempty"`
-	SubType string `json:"subType,omitempty"`
-	Count   int    `json:"count,omitempty"`
-	Derived bool   `json:"derived,omitempty"`
+	ID      string `json:"id" table:"id"`
+	Label   string `json:"label,omitempty" table:"label"`
+	Type    string `json:"type,omitempty" table:"type"`
+	SubType string `json:"subType,omitempty" table:"subtype"`
+	Count   int    `json:"count,omitempty" table:"count"`
+	Derived bool   `json:"derived,omitempty" table:"-"`
+
+	// PaperTitle is set on an arxiv tag, and is the only place a repo's tag list
+	// says what the paper it cites is actually called.
+	PaperTitle string `json:"paperTitle,omitempty" table:"-"`
+
+	// Clickable and Disabled are how the page renders the tag: a disabled tag
+	// links nowhere, which on a dataset tag means the dataset it names is gone
+	// or private. They are the hub's own judgement about which of a repo's
+	// declared relations still resolve.
+	Clickable bool `json:"clickable,omitempty" table:"-"`
+	Disabled  bool `json:"disabled,omitempty" table:"-"`
 }
 
 // UnmarshalJSON decodes the known fields and sweeps the rest into Extra.
+//
+// A page tag nests some of its fields under a key the hub calls extra, which
+// collides with the Extra every record here uses for the opposite purpose. So
+// that object is decoded a second time into the same struct: its keys are
+// fields hf models, and anything left over lands in Extra, which is where an
+// unmodelled field belongs anyway.
 func (t *Tag) UnmarshalJSON(b []byte) error {
 	type raw Tag
-	return decodeExtra(b, (*raw)(t), &t.Extra)
+	var all map[string]json.RawMessage
+	nested := json.RawMessage(nil)
+	if json.Unmarshal(b, &all) == nil && len(all["extra"]) > 0 {
+		nested = all["extra"]
+		delete(all, "extra")
+		if outer, err := json.Marshal(all); err == nil {
+			b = outer
+		}
+	}
+	if err := decodeExtra(b, (*raw)(t), &t.Extra); err != nil {
+		return err
+	}
+	if len(nested) == 0 {
+		return nil
+	}
+	var inner Tag
+	if err := decodeExtra(nested, (*raw)(&inner), &inner.Extra); err != nil {
+		return err
+	}
+	takeString(&t.PaperTitle, inner.PaperTitle)
+	t.Clickable = t.Clickable || inner.Clickable
+	t.Disabled = t.Disabled || inner.Disabled
+	for k, v := range inner.Extra {
+		if t.Extra == nil {
+			t.Extra = map[string]json.RawMessage{}
+		}
+		t.Extra[k] = v
+	}
+	return nil
 }
 
 func (t *Tag) normalize(sourceURL string) {
@@ -186,7 +231,7 @@ type Taxonomy struct {
 	Meta
 
 	// Groups is the document as it arrived, keyed by tag type.
-	Groups map[string][]Tag `json:"groups,omitempty"`
+	Groups map[string][]Tag `json:"groups,omitempty" table:"-"`
 
 	// byID answers the only question the parser asks: what type is this bare
 	// word. It is built once at load.
@@ -288,18 +333,23 @@ func (t *Taxonomy) Tags() []Tag {
 type Task struct {
 	Meta
 
-	ID            string          `json:"id"`
-	Label         string          `json:"label"`
-	Summary       string          `json:"summary,omitempty"`
-	Libraries     []string        `json:"libraries,omitempty"`
-	Models        []TaskItem      `json:"models,omitempty"`
-	Datasets      []TaskItem      `json:"datasets,omitempty"`
-	Spaces        []TaskItem      `json:"spaces,omitempty"`
-	Metrics       []TaskItem      `json:"metrics,omitempty"`
-	WidgetModels  []string        `json:"widgetModels,omitempty"`
-	YoutubeID     string          `json:"youtubeId,omitempty"`
-	Demo          json.RawMessage `json:"demo,omitempty"`
-	IsPlaceholder bool            `json:"isPlaceholder,omitempty"`
+	ID            string          `json:"id" table:"id"`
+	Label         string          `json:"label" table:"label"`
+	Summary       string          `json:"summary,omitempty" table:"summary,truncate"`
+	Libraries     []string        `json:"libraries,omitempty" table:"-"`
+	Models        []TaskItem      `json:"models,omitempty" table:"-"`
+	Datasets      []TaskItem      `json:"datasets,omitempty" table:"-"`
+	Spaces        []TaskItem      `json:"spaces,omitempty" table:"-"`
+	Metrics       []TaskItem      `json:"metrics,omitempty" table:"-"`
+	WidgetModels  []string        `json:"widgetModels,omitempty" table:"-"`
+	YoutubeID     string          `json:"youtubeId,omitempty" table:"-"`
+	Demo          json.RawMessage `json:"demo,omitempty" table:"-"`
+	IsPlaceholder bool            `json:"isPlaceholder,omitempty" table:"-"`
+
+	// CanonicalID names the task this one is an alias of. Several task pages are
+	// synonyms that redirect, and without this the alias looks like a task in its
+	// own right with nothing in it.
+	CanonicalID string `json:"canonicalId,omitempty" table:"-"`
 }
 
 // UnmarshalJSON decodes the known fields and sweeps the rest into Extra.

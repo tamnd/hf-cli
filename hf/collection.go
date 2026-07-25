@@ -11,31 +11,31 @@ import (
 type Collection struct {
 	Meta
 
-	Slug        string    `json:"slug"`
-	Namespace   string    `json:"namespace,omitempty"`
-	ShortSlug   string    `json:"shortSlug,omitempty"`
-	ObjectID    string    `json:"_id,omitempty"`
-	Title       string    `json:"title"`
-	Description string    `json:"description,omitempty"`
-	Gating      bool      `json:"gating,omitempty"`
-	Theme       string    `json:"theme,omitempty"`
-	Position    int       `json:"position,omitempty"`
-	Private     bool      `json:"private,omitempty"`
-	LastUpdated time.Time `json:"lastUpdated,omitzero"`
-	Upvotes     int       `json:"upvotes,omitempty"`
+	Slug        string    `json:"slug" table:"slug"`
+	Namespace   string    `json:"namespace,omitempty" table:"-"`
+	ShortSlug   string    `json:"shortSlug,omitempty" table:"-"`
+	ObjectID    string    `json:"_id,omitempty" table:"-"`
+	Title       string    `json:"title" table:"title,truncate"`
+	Description string    `json:"description,omitempty" table:"-"`
+	Gating      bool      `json:"gating,omitempty" table:"-"`
+	Theme       string    `json:"theme,omitempty" table:"-"`
+	Position    int       `json:"position,omitempty" table:"-"`
+	Private     bool      `json:"private,omitempty" table:"-"`
+	LastUpdated time.Time `json:"lastUpdated,omitzero" table:"updated,time"`
+	Upvotes     int       `json:"upvotes,omitempty" table:"upvotes"`
 
 	// IsUpvotedByUser is relative to the token making the request.
-	IsUpvotedByUser bool `json:"isUpvotedByUser,omitempty"`
+	IsUpvotedByUser bool `json:"isUpvotedByUser,omitempty" table:"-"`
 
 	// ShareURL is the hub's own social card link, which is not the page URL and
 	// is the only short form of a collection address the site publishes.
-	ShareURL string `json:"shareUrl,omitempty"`
+	ShareURL string `json:"shareUrl,omitempty" table:"-"`
 
-	Owner *UserRef         `json:"owner,omitempty"`
-	Items []CollectionItem `json:"items,omitempty"`
+	Owner *UserRef         `json:"owner,omitempty" table:"-"`
+	Items []CollectionItem `json:"items,omitempty" table:"-"`
 
 	// Page-derived.
-	Upvoters []UserRef `json:"upvoters,omitempty"`
+	Upvoters []UserRef `json:"upvoters,omitempty" table:"-"`
 }
 
 // UnmarshalJSON decodes the known fields and sweeps the rest into Extra.

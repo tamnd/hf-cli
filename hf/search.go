@@ -14,29 +14,29 @@ import (
 type Hit struct {
 	Meta
 
-	Type           string `json:"type"`
-	ID             string `json:"id"`
-	ObjectID       string `json:"_id,omitempty"`
-	Label          string `json:"label,omitempty"`
-	Private        bool   `json:"private,omitempty"`
-	Gated          Gated  `json:"gated,omitempty"`
-	TrendingWeight int    `json:"trendingWeight,omitempty"`
-	Likes          int    `json:"likes,omitempty"`
-	Downloads      int    `json:"downloads,omitempty"`
-	AvatarURL      string `json:"avatarUrl,omitempty"`
-	Fullname       string `json:"fullname,omitempty"`
+	Type           string `json:"type" table:"type"`
+	ID             string `json:"id" table:"id"`
+	ObjectID       string `json:"_id,omitempty" table:"-"`
+	Label          string `json:"label,omitempty" table:"-"`
+	Private        bool   `json:"private,omitempty" table:"-"`
+	Gated          Gated  `json:"gated,omitempty" table:"-"`
+	TrendingWeight int    `json:"trendingWeight,omitempty" table:"-"`
+	Likes          int    `json:"likes,omitempty" table:"likes"`
+	Downloads      int    `json:"downloads,omitempty" table:"downloads"`
+	AvatarURL      string `json:"avatarUrl,omitempty" table:"-"`
+	Fullname       string `json:"fullname,omitempty" table:"-"`
 
 	// The trending feed hands back a repo summary rather than a search label, so
 	// a hit carries the summary fields too. They stay empty for a quicksearch
 	// result, which only ever knows the id.
-	Author             string             `json:"author,omitempty"`
-	AuthorData         *UserRef           `json:"authorData,omitempty"`
-	LastModified       time.Time          `json:"lastModified,omitzero"`
-	PipelineTag        string             `json:"pipeline_tag,omitempty"`
-	NumParameters      int64              `json:"numParameters,omitempty"`
-	InferenceProviders InferenceProviders `json:"availableInferenceProviders,omitempty"`
-	IsLikedByUser      bool               `json:"isLikedByUser,omitempty"`
-	WidgetOutputURLs   []string           `json:"widgetOutputUrls,omitempty"`
+	Author             string             `json:"author,omitempty" table:"-"`
+	AuthorData         *UserRef           `json:"authorData,omitempty" table:"-"`
+	LastModified       time.Time          `json:"lastModified,omitzero" table:"-"`
+	PipelineTag        string             `json:"pipeline_tag,omitempty" table:"-"`
+	NumParameters      int64              `json:"numParameters,omitempty" table:"-"`
+	InferenceProviders InferenceProviders `json:"availableInferenceProviders,omitempty" table:"-"`
+	IsLikedByUser      bool               `json:"isLikedByUser,omitempty" table:"-"`
+	WidgetOutputURLs   []string           `json:"widgetOutputUrls,omitempty" table:"-"`
 }
 
 // UnmarshalJSON decodes the known fields and sweeps the rest into Extra. A
@@ -82,16 +82,16 @@ func (h *Hit) normalize(kind, sourceURL string) {
 type Counts struct {
 	Meta
 
-	Query       string `json:"query"`
-	Models      int    `json:"models"`
-	Datasets    int    `json:"datasets"`
-	Spaces      int    `json:"spaces"`
-	Papers      int    `json:"papers"`
-	Collections int    `json:"collections"`
-	Kernels     int    `json:"kernels"`
-	Users       int    `json:"users"`
-	Orgs        int    `json:"orgs"`
-	Total       int    `json:"total"`
+	Query       string `json:"query" table:"query"`
+	Models      int    `json:"models" table:"models"`
+	Datasets    int    `json:"datasets" table:"datasets"`
+	Spaces      int    `json:"spaces" table:"spaces"`
+	Papers      int    `json:"papers" table:"papers"`
+	Collections int    `json:"collections" table:"collections"`
+	Kernels     int    `json:"kernels" table:"kernels"`
+	Users       int    `json:"users" table:"users"`
+	Orgs        int    `json:"orgs" table:"orgs"`
+	Total       int    `json:"total" table:"total"`
 }
 
 // UnmarshalJSON decodes the known fields and sweeps the rest into Extra.
@@ -146,10 +146,10 @@ func (q *quicksearchResult) groups() []struct {
 type SitemapEntry struct {
 	Meta
 
-	Loc        string `json:"loc"`
-	LastMod    string `json:"lastmod,omitempty"`
-	ChangeFreq string `json:"changefreq,omitempty"`
-	Priority   string `json:"priority,omitempty"`
+	Loc        string `json:"loc" table:"loc"`
+	LastMod    string `json:"lastmod,omitempty" table:"lastmod"`
+	ChangeFreq string `json:"changefreq,omitempty" table:"-"`
+	Priority   string `json:"priority,omitempty" table:"-"`
 }
 
 // normalize classifies the URL back into a kind and an id, so a sitemap sweep

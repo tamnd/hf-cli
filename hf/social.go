@@ -15,33 +15,33 @@ import (
 type Post struct {
 	Meta
 
-	Slug        string       `json:"slug"`
-	ObjectID    string       `json:"_id,omitempty"`
-	Author      *UserRef     `json:"author,omitempty"`
-	Content     []PostToken  `json:"content,omitempty"`
-	Body        string       `json:"body,omitempty"`
-	PublishedAt time.Time    `json:"publishedAt,omitzero"`
-	UpdatedAt   time.Time    `json:"updatedAt,omitzero"`
-	NumComments int          `json:"numComments,omitempty"`
-	Reactions   []Reaction   `json:"reactions,omitempty"`
-	Comments    []Comment    `json:"comments,omitempty"`
-	IsPinned    bool         `json:"isPinned,omitempty"`
-	Attachments []Attachment `json:"attachments,omitempty"`
-	Identifier  string       `json:"identifier,omitempty"`
+	Slug        string       `json:"slug" table:"slug"`
+	ObjectID    string       `json:"_id,omitempty" table:"-"`
+	Author      *UserRef     `json:"author,omitempty" table:"-"`
+	Content     []PostToken  `json:"content,omitempty" table:"-"`
+	Body        string       `json:"body,omitempty" table:"body,truncate"`
+	PublishedAt time.Time    `json:"publishedAt,omitzero" table:"published,time"`
+	UpdatedAt   time.Time    `json:"updatedAt,omitzero" table:"-"`
+	NumComments int          `json:"numComments,omitempty" table:"comments"`
+	Reactions   []Reaction   `json:"reactions,omitempty" table:"-"`
+	Comments    []Comment    `json:"comments,omitempty" table:"-"`
+	IsPinned    bool         `json:"isPinned,omitempty" table:"-"`
+	Attachments []Attachment `json:"attachments,omitempty" table:"-"`
+	Identifier  string       `json:"identifier,omitempty" table:"-"`
 
 	// Commentators is who replied, without fetching the replies. Mentions is who
 	// the post named, already resolved to accounts, which is the one social edge
 	// the hub draws out of free text for you.
-	Commentators []UserRef `json:"commentators,omitempty"`
-	Mentions     []UserRef `json:"mentions,omitempty"`
+	Commentators []UserRef `json:"commentators,omitempty" table:"-"`
+	Mentions     []UserRef `json:"mentions,omitempty" table:"-"`
 
 	// TotalUniqueImpressions is the only reach number the hub publishes, and it
 	// is absent on posts too old or too new to have one.
-	TotalUniqueImpressions int `json:"totalUniqueImpressions,omitempty"`
+	TotalUniqueImpressions int `json:"totalUniqueImpressions,omitempty" table:"-"`
 
 	// IdentifiedLanguage is the hub's own guess, probability included, so a
 	// low-confidence guess can be told apart from a confident one.
-	IdentifiedLanguage *LanguageGuess `json:"identifiedLanguage,omitempty"`
+	IdentifiedLanguage *LanguageGuess `json:"identifiedLanguage,omitempty" table:"-"`
 }
 
 // LanguageGuess is a language code and how sure the classifier was.
@@ -52,18 +52,23 @@ type LanguageGuess struct {
 
 // UnmarshalJSON decodes the known fields and sweeps the rest into Extra. The
 // source markdown arrives as rawContent and lands in Body, because a post has
-// one body and carrying it twice would double the size of a feed dump.
+// one body and carrying it twice would double the size of a feed dump. The
+// object id is _id in the feed and id on the page, and both mean the same thing.
 func (p *Post) UnmarshalJSON(b []byte) error {
 	type raw Post
-	if err := decodeExtra(b, (*raw)(p), &p.Extra, "rawContent"); err != nil {
+	if err := decodeExtra(b, (*raw)(p), &p.Extra, "rawContent", "id"); err != nil {
 		return err
 	}
-	if p.Body == "" {
-		var alt struct {
-			RawContent string `json:"rawContent"`
-		}
-		if json.Unmarshal(b, &alt) == nil {
+	var alt struct {
+		RawContent string `json:"rawContent"`
+		ID         string `json:"id"`
+	}
+	if json.Unmarshal(b, &alt) == nil {
+		if p.Body == "" {
 			p.Body = alt.RawContent
+		}
+		if p.ObjectID == "" {
+			p.ObjectID = alt.ID
 		}
 	}
 	return nil
@@ -78,6 +83,11 @@ func (p *Post) normalize(sourceURL string) {
 	}
 	for i := range p.Mentions {
 		p.Mentions[i].normalize()
+	}
+	for i := range p.Comments {
+		if p.Comments[i].Author != nil {
+			p.Comments[i].Author.normalize()
+		}
 	}
 	if p.Body == "" {
 		p.Body = renderTokens(p.Content)
@@ -203,25 +213,25 @@ type Comment struct {
 type BlogPost struct {
 	Meta
 
-	Slug        string    `json:"slug"`
-	Title       string    `json:"title"`
-	Description string    `json:"description,omitempty"`
-	PublishedAt time.Time `json:"publishedAt,omitzero"`
-	GUID        string    `json:"guid,omitempty"`
-	Lang        string    `json:"lang,omitempty"`
-	Thumbnail   string    `json:"thumbnail,omitempty"`
-	Tags        []string  `json:"tags,omitempty"`
+	Slug        string    `json:"slug" table:"slug"`
+	Title       string    `json:"title" table:"title,truncate"`
+	Description string    `json:"description,omitempty" table:"-"`
+	PublishedAt time.Time `json:"publishedAt,omitzero" table:"published,time"`
+	GUID        string    `json:"guid,omitempty" table:"-"`
+	Lang        string    `json:"lang,omitempty" table:"-"`
+	Thumbnail   string    `json:"thumbnail,omitempty" table:"-"`
+	Tags        []string  `json:"tags,omitempty" table:"-"`
 
-	Authors      []UserRef `json:"authors,omitempty"`
-	Translators  []UserRef `json:"translators,omitempty"`
-	Proofreaders []UserRef `json:"proofreaders,omitempty"`
+	Authors      []UserRef `json:"authors,omitempty" table:"-"`
+	Translators  []UserRef `json:"translators,omitempty" table:"-"`
+	Proofreaders []UserRef `json:"proofreaders,omitempty" table:"-"`
 
-	Upvotes  int       `json:"upvotes,omitempty"`
-	Upvoters []UserRef `json:"upvoters,omitempty"`
-	Comments []Comment `json:"comments,omitempty"`
+	Upvotes  int       `json:"upvotes,omitempty" table:"upvotes"`
+	Upvoters []UserRef `json:"upvoters,omitempty" table:"-"`
+	Comments []Comment `json:"comments,omitempty" table:"-"`
 
-	Blocks []Block `json:"blocks,omitempty"`
-	Body   string  `json:"body,omitempty"`
+	Blocks []Block `json:"blocks,omitempty" table:"-"`
+	Body   string  `json:"body,omitempty" table:"-"`
 }
 
 // UnmarshalJSON decodes the known fields and sweeps the rest into Extra.
@@ -249,9 +259,9 @@ type Block struct {
 type Like struct {
 	Meta
 
-	User      string    `json:"user"`
-	CreatedAt time.Time `json:"createdAt,omitzero"`
-	Repo      *RepoRef  `json:"repo,omitempty"`
+	User      string    `json:"user" table:"user"`
+	CreatedAt time.Time `json:"createdAt,omitzero" table:"liked,time"`
+	Repo      *RepoRef  `json:"repo,omitempty" table:"-"`
 }
 
 // UnmarshalJSON decodes the known fields and sweeps the rest into Extra.

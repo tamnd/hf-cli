@@ -410,7 +410,7 @@ type listIn struct {
 	License   []string `kit:"flag" help:"license, e.g. apache-2.0"`
 	Size      []string `kit:"flag" help:"dataset size category, e.g. 1M<n<10M"`
 	Benchmark []string `kit:"flag" help:"dataset benchmark tag"`
-	SDK       []string `kit:"flag" help:"space SDK, e.g. gradio, streamlit, docker"`
+	SDK       []string `kit:"flag,name=sdk" help:"space SDK, e.g. gradio, streamlit, docker"`
 	Sort      string   `kit:"flag" help:"downloads, likes, createdAt, lastModified, or trendingScore" enum:"downloads,likes,createdAt,lastModified,trendingScore"`
 	Direction string   `kit:"flag" help:"asc or desc" enum:"asc,desc"`
 	Full      bool     `kit:"flag" help:"ask for near-detail rows instead of stubs"`
@@ -553,22 +553,22 @@ func listCollections(ctx context.Context, in collectionListIn, emit func(*Collec
 }
 
 type paperListIn struct {
-	C     *Client `kit:"inject"`
-	Q     string  `kit:"flag" help:"search papers by title and abstract"`
-	Date  string  `kit:"flag" help:"a daily feed date, YYYY-MM-DD"`
-	Daily bool    `kit:"flag" help:"read the daily papers feed"`
-	Sort  string  `kit:"flag" help:"publishedAt or trending" enum:"publishedAt,trending"`
-	Limit int     `kit:"flag,inherit"`
+	C      *Client `kit:"inject"`
+	Search string  `kit:"flag" help:"search papers by title and abstract"`
+	Date   string  `kit:"flag" help:"a daily feed date, YYYY-MM-DD"`
+	Daily  bool    `kit:"flag" help:"read the daily papers feed"`
+	Sort   string  `kit:"flag" help:"publishedAt or trending" enum:"publishedAt,trending"`
+	Limit  int     `kit:"flag,inherit"`
 }
 
 func listPapers(ctx context.Context, in paperListIn, emit func(*Paper) error) error {
 	if in.Daily || in.Date != "" {
 		return in.C.DailyPapers(ctx, in.Date, in.Sort, in.Limit, emit)
 	}
-	if in.Q == "" {
-		return errs.Usage("papers needs --q to search or --daily for the feed")
+	if in.Search == "" {
+		return errs.Usage("papers needs --search to search or --daily for the feed")
 	}
-	return in.C.SearchPapers(ctx, in.Q, in.Limit, emit)
+	return in.C.SearchPapers(ctx, in.Search, in.Limit, emit)
 }
 
 type limitIn struct {
@@ -674,7 +674,7 @@ func listSitemap(ctx context.Context, in sitemapIn, emit func(*SitemapEntry) err
 type dumpIn struct {
 	C       *Client `kit:"inject"`
 	Kind    string  `kit:"arg" help:"model, dataset, space, or user"`
-	IDsOnly bool    `kit:"flag" help:"emit sitemap entries instead of fetching each record"`
+	IDsOnly bool    `kit:"flag,name=ids-only" help:"emit sitemap entries instead of fetching each record"`
 	Yes     bool    `kit:"flag" help:"confirm an unbounded sweep"`
 	Jobs    int     `kit:"flag" help:"concurrent fetches (0 = the client default)"`
 	Limit   int     `kit:"flag,inherit"`
@@ -1050,7 +1050,7 @@ type rowIn struct {
 	Config  string  `kit:"flag" help:"dataset config (default: the first one)"`
 	Split   string  `kit:"flag" help:"split (default: train, or the first one)"`
 	Offset  int64   `kit:"flag" help:"start at this row"`
-	OrderBy string  `kit:"flag" help:"SQL-ish ORDER BY clause"`
+	OrderBy string  `kit:"flag,name=order-by" help:"SQL-ish ORDER BY clause"`
 	Limit   int     `kit:"flag,inherit"`
 }
 
@@ -1281,7 +1281,7 @@ type filterIn struct {
 	Config  string  `kit:"flag" help:"dataset config"`
 	Split   string  `kit:"flag" help:"split"`
 	Offset  int64   `kit:"flag" help:"start at this row"`
-	OrderBy string  `kit:"flag" help:"SQL-ish ORDER BY clause"`
+	OrderBy string  `kit:"flag,name=order-by" help:"SQL-ish ORDER BY clause"`
 	Limit   int     `kit:"flag,inherit"`
 }
 
@@ -1393,10 +1393,10 @@ type crawlIn struct {
 	Ref       string   `kit:"arg" help:"seed reference"`
 	Depth     int      `kit:"flag" help:"how many edges out to walk" default:"1"`
 	Follow    []string `kit:"flag" help:"predicates to follow (default: the structural ones)"`
-	MaxNodes  int      `kit:"flag" help:"stop after this many nodes" default:"10000"`
+	MaxNodes  int      `kit:"flag,name=max-nodes" help:"stop after this many nodes" default:"10000"`
 	MaxReqs   int      `kit:"flag,name=max-requests" help:"stop after this many requests" default:"5000"`
-	NodesOnly bool     `kit:"flag" help:"emit nodes only"`
-	EdgesOnly bool     `kit:"flag" help:"emit edges only"`
+	NodesOnly bool     `kit:"flag,name=nodes-only" help:"emit nodes only"`
+	EdgesOnly bool     `kit:"flag,name=edges-only" help:"emit edges only"`
 }
 
 func crawl(ctx context.Context, in crawlIn, emit func(any) error) error {
@@ -1423,8 +1423,8 @@ func crawl(ctx context.Context, in crawlIn, emit func(any) error) error {
 type Address struct {
 	Meta
 
-	Input string `json:"input"`
-	ID    string `json:"id"`
+	Input string `json:"input" table:"input"`
+	ID    string `json:"id" table:"id"`
 }
 
 type inputIn struct {

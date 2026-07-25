@@ -13,12 +13,12 @@ import (
 type Ref struct {
 	Meta
 
-	RepoID       string `json:"repoId,omitempty"`
-	RepoType     string `json:"repoType,omitempty"`
-	Name         string `json:"name"`
-	Ref          string `json:"ref"`
-	Kind         string `json:"kind"`
-	TargetCommit string `json:"targetCommit,omitempty"`
+	RepoID       string `json:"repoId,omitempty" table:"-"`
+	RepoType     string `json:"repoType,omitempty" table:"-"`
+	Name         string `json:"name" table:"name"`
+	Ref          string `json:"ref" table:"-"`
+	Kind         string `json:"kind" table:"kind"`
+	TargetCommit string `json:"targetCommit,omitempty" table:"commit"`
 }
 
 // UnmarshalJSON decodes the known fields and sweeps the rest into Extra.
@@ -52,25 +52,25 @@ func (r *Ref) normalize(repoKind, repo, kind, sourceURL string) {
 type TreeEntry struct {
 	Meta
 
-	RepoID   string `json:"repoId,omitempty"`
-	RepoType string `json:"repoType,omitempty"`
-	Revision string `json:"revision,omitempty"`
+	RepoID   string `json:"repoId,omitempty" table:"-"`
+	RepoType string `json:"repoType,omitempty" table:"-"`
+	Revision string `json:"revision,omitempty" table:"-"`
 
-	Type string `json:"type"`
-	OID  string `json:"oid,omitempty"`
-	Size int64  `json:"size,omitempty"`
-	Path string `json:"path"`
+	Type string `json:"type" table:"type"`
+	OID  string `json:"oid,omitempty" table:"oid"`
+	Size int64  `json:"size,omitempty" table:"size"`
+	Path string `json:"path" table:"path"`
 
-	LFS        *LFSInfo        `json:"lfs,omitempty"`
-	LastCommit *CommitRef      `json:"lastCommit,omitempty"`
-	Security   *SecurityStatus `json:"securityFileStatus,omitempty"`
-	XetHash    string          `json:"xetHash,omitempty"`
+	LFS        *LFSInfo        `json:"lfs,omitempty" table:"-"`
+	LastCommit *CommitRef      `json:"lastCommit,omitempty" table:"-"`
+	Security   *SecurityStatus `json:"securityFileStatus,omitempty" table:"-"`
+	XetHash    string          `json:"xetHash,omitempty" table:"-"`
 
 	// Derived, because a tree entry with no way to fetch its bytes is half a
 	// record.
-	DownloadURL string `json:"downloadUrl,omitempty"`
-	RawURL      string `json:"rawUrl,omitempty"`
-	IsLFS       bool   `json:"isLfs,omitempty"`
+	DownloadURL string `json:"downloadUrl,omitempty" table:"-"`
+	RawURL      string `json:"rawUrl,omitempty" table:"-"`
+	IsLFS       bool   `json:"isLfs,omitempty" table:"-"`
 }
 
 // UnmarshalJSON decodes the known fields and sweeps the rest into Extra.
@@ -177,14 +177,14 @@ type PickleImport struct {
 type Commit struct {
 	Meta
 
-	RepoID    string         `json:"repoId,omitempty"`
-	RepoType  string         `json:"repoType,omitempty"`
-	ID        string         `json:"id"`
-	Title     string         `json:"title"`
-	Message   string         `json:"message,omitempty"`
-	Date      time.Time      `json:"date,omitzero"`
-	Authors   []CommitAuthor `json:"authors,omitempty"`
-	Formatted string         `json:"formatted,omitempty"`
+	RepoID    string         `json:"repoId,omitempty" table:"-"`
+	RepoType  string         `json:"repoType,omitempty" table:"-"`
+	ID        string         `json:"id" table:"id"`
+	Title     string         `json:"title" table:"title,truncate"`
+	Message   string         `json:"message,omitempty" table:"-"`
+	Date      time.Time      `json:"date,omitzero" table:"date,time"`
+	Authors   []CommitAuthor `json:"authors,omitempty" table:"-"`
+	Formatted string         `json:"formatted,omitempty" table:"-"`
 }
 
 // UnmarshalJSON decodes the known fields and sweeps the rest into Extra.

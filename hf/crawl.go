@@ -209,7 +209,7 @@ func (c *Client) FetchRef(ctx context.Context, input string) (string, string, an
 		return "", "", nil, err
 	}
 	rec, err := c.Fetch(ctx, kind, id)
-	if err == nil || !guessedModel(input, kind) || errs.KindOf(err) != errs.KindNotFound {
+	if err == nil || !guessedModel(input, kind) || !wrongGuess(err) {
 		return kind, id, rec, err
 	}
 	for _, alt := range []string{KindDataset, KindSpace, KindKernel} {
@@ -220,11 +220,29 @@ func (c *Client) FetchRef(ctx context.Context, input string) (string, string, an
 	return kind, id, nil, err
 }
 
+// wrongGuess reports whether an error is the kind that a wrong guess produces.
+// Not found is the obvious one. Authentication required is the same answer in
+// disguise: to an anonymous reader the hub refuses to say whether a private
+// repo exists, so a dataset asked about as a model comes back as a login
+// prompt rather than a 404.
+func wrongGuess(err error) bool {
+	switch errs.KindOf(err) {
+	case errs.KindNotFound, errs.KindNeedAuth:
+		return true
+	default:
+		return false
+	}
+}
+
 // guessedModel reports whether the model kind came from Classify's default
-// rather than from the reference itself. A URL, a URI, and a prefixed id all
-// name their kind; a bare owner/name does not.
+// rather than from the reference itself. A URL, a URI, and a kind-prefixed path
+// all name their kind; a bare owner/name does not.
 func guessedModel(input, kind string) bool {
-	return kind == KindModel && !strings.Contains(input, "://") && !strings.Contains(input, "/models/")
+	if kind != KindModel || strings.Contains(input, "://") {
+		return false
+	}
+	parts := strings.Split(strings.Trim(strings.TrimSpace(input), "/"), "/")
+	return len(parts) == 2 && parts[0] != "models"
 }
 
 // GraphOf builds the node and edges for one entity, taxonomy included. This is

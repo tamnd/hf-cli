@@ -14,50 +14,50 @@ import (
 type User struct {
 	Meta
 
-	Name      string `json:"name"`
-	ObjectID  string `json:"_id,omitempty"`
-	Fullname  string `json:"fullname,omitempty"`
-	AvatarURL string `json:"avatarUrl,omitempty"`
-	Details   string `json:"details,omitempty"`
-	IsPro     bool   `json:"isPro,omitempty"`
-	IsHf      bool   `json:"isHf,omitempty"`
-	IsMod     bool   `json:"isMod,omitempty"`
-	Type      string `json:"type,omitempty"`
+	Name      string `json:"name" table:"name"`
+	ObjectID  string `json:"_id,omitempty" table:"-"`
+	Fullname  string `json:"fullname,omitempty" table:"fullname"`
+	AvatarURL string `json:"avatarUrl,omitempty" table:"-"`
+	Details   string `json:"details,omitempty" table:"-"`
+	IsPro     bool   `json:"isPro,omitempty" table:"-"`
+	IsHf      bool   `json:"isHf,omitempty" table:"-"`
+	IsMod     bool   `json:"isMod,omitempty" table:"-"`
+	Type      string `json:"type,omitempty" table:"-"`
 
 	// The overview repeats the name under a second key and adds the account's
 	// age, which is the only place on the hub a person's join date appears.
-	Handle              string    `json:"user,omitempty"`
-	CreatedAt           time.Time `json:"createdAt,omitzero"`
-	PrimaryOrgAvatarURL string    `json:"primaryOrgAvatarUrl,omitempty"`
+	Handle              string    `json:"user,omitempty" table:"-"`
+	CreatedAt           time.Time `json:"createdAt,omitzero" table:"-"`
+	PrimaryOrgAvatarURL string    `json:"primaryOrgAvatarUrl,omitempty" table:"-"`
 	// IsFollowing is relative to the token making the request, so it is empty
 	// for an anonymous read and true only for the caller's own following list.
-	IsFollowing bool `json:"isFollowing,omitempty"`
+	IsFollowing bool `json:"isFollowing,omitempty" table:"-"`
 
-	NumModels        int `json:"numModels"`
-	NumDatasets      int `json:"numDatasets"`
-	NumSpaces        int `json:"numSpaces"`
-	NumKernels       int `json:"numKernels"`
-	NumBuckets       int `json:"numBuckets,omitempty"`
-	NumPapers        int `json:"numPapers"`
-	NumDiscussions   int `json:"numDiscussions"`
-	NumUpvotes       int `json:"numUpvotes"`
-	NumLikes         int `json:"numLikes"`
-	NumFollowers     int `json:"numFollowers"`
-	NumFollowing     int `json:"numFollowing"`
-	NumFollowingOrgs int `json:"numFollowingOrgs,omitempty"`
+	NumModels        int `json:"numModels" table:"models"`
+	NumDatasets      int `json:"numDatasets" table:"datasets"`
+	NumSpaces        int `json:"numSpaces" table:"spaces"`
+	NumKernels       int `json:"numKernels" table:"-"`
+	NumBuckets       int `json:"numBuckets,omitempty" table:"-"`
+	NumPapers        int `json:"numPapers" table:"-"`
+	NumDiscussions   int `json:"numDiscussions" table:"-"`
+	NumUpvotes       int `json:"numUpvotes" table:"-"`
+	NumLikes         int `json:"numLikes" table:"-"`
+	NumFollowers     int `json:"numFollowers" table:"followers"`
+	NumFollowing     int `json:"numFollowing" table:"-"`
+	NumFollowingOrgs int `json:"numFollowingOrgs,omitempty" table:"-"`
 
-	Orgs []UserRef `json:"orgs,omitempty"`
+	Orgs []UserRef `json:"orgs,omitempty" table:"-"`
 
 	// Page-derived. The profile carries the first page of each list inline, so a
 	// deep fetch of a namespace answers what three list calls would.
-	CommunityScore int          `json:"communityScore,omitempty"`
-	Activities     []Activity   `json:"activities,omitempty"`
-	BlogPosts      []BlogRef    `json:"blogPosts,omitempty"`
-	TotalBlogPosts int          `json:"totalBlogPosts,omitempty"`
-	Models         []Model      `json:"models,omitempty"`
-	Datasets       []Dataset    `json:"datasets,omitempty"`
-	Spaces         []Space      `json:"spaces,omitempty"`
-	Collections    []Collection `json:"collections,omitempty"`
+	CommunityScore int          `json:"communityScore,omitempty" table:"-"`
+	Activities     []Activity   `json:"activities,omitempty" table:"-"`
+	BlogPosts      []BlogRef    `json:"blogPosts,omitempty" table:"-"`
+	TotalBlogPosts int          `json:"totalBlogPosts,omitempty" table:"-"`
+	Models         []Model      `json:"models,omitempty" table:"-"`
+	Datasets       []Dataset    `json:"datasets,omitempty" table:"-"`
+	Spaces         []Space      `json:"spaces,omitempty" table:"-"`
+	Collections    []Collection `json:"collections,omitempty" table:"-"`
 }
 
 // UnmarshalJSON decodes the known fields and sweeps the rest into Extra.
@@ -70,39 +70,39 @@ func (u *User) UnmarshalJSON(b []byte) error {
 type Org struct {
 	Meta
 
-	Name         string `json:"name"`
-	ObjectID     string `json:"_id,omitempty"`
-	Fullname     string `json:"fullname,omitempty"`
-	Details      string `json:"details,omitempty"`
-	AvatarURL    string `json:"avatarUrl,omitempty"`
-	IsVerified   bool   `json:"isVerified,omitempty"`
-	IsEnterprise bool   `json:"isEnterprise,omitempty"`
-	Plan         string `json:"plan,omitempty"`
-	Type         string `json:"type,omitempty"`
+	Name         string `json:"name" table:"name"`
+	ObjectID     string `json:"_id,omitempty" table:"-"`
+	Fullname     string `json:"fullname,omitempty" table:"fullname"`
+	Details      string `json:"details,omitempty" table:"-"`
+	AvatarURL    string `json:"avatarUrl,omitempty" table:"-"`
+	IsVerified   bool   `json:"isVerified,omitempty" table:"-"`
+	IsEnterprise bool   `json:"isEnterprise,omitempty" table:"-"`
+	Plan         string `json:"plan,omitempty" table:"-"`
+	Type         string `json:"type,omitempty" table:"-"`
 
 	// IsFollowing is relative to the token making the request.
-	IsFollowing bool `json:"isFollowing,omitempty"`
+	IsFollowing bool `json:"isFollowing,omitempty" table:"-"`
 
-	NumUsers     int `json:"numUsers"`
-	NumModels    int `json:"numModels"`
-	NumDatasets  int `json:"numDatasets"`
-	NumSpaces    int `json:"numSpaces"`
-	NumKernels   int `json:"numKernels"`
-	NumBuckets   int `json:"numBuckets,omitempty"`
-	NumPapers    int `json:"numPapers"`
-	NumFollowers int `json:"numFollowers"`
+	NumUsers     int `json:"numUsers" table:"members"`
+	NumModels    int `json:"numModels" table:"models"`
+	NumDatasets  int `json:"numDatasets" table:"datasets"`
+	NumSpaces    int `json:"numSpaces" table:"spaces"`
+	NumKernels   int `json:"numKernels" table:"-"`
+	NumBuckets   int `json:"numBuckets,omitempty" table:"-"`
+	NumPapers    int `json:"numPapers" table:"-"`
+	NumFollowers int `json:"numFollowers" table:"followers"`
 
 	// Page-derived. The org page is the single biggest win in the tool: one
 	// request replaces the overview, the member list, a follower sample, three
 	// repo list calls, a collections call, and a papers call.
-	Card            string       `json:"card,omitempty"`
-	Members         []UserRef    `json:"members,omitempty"`
-	SampleFollowers []UserRef    `json:"sampleFollowers,omitempty"`
-	Models          []Model      `json:"models,omitempty"`
-	Datasets        []Dataset    `json:"datasets,omitempty"`
-	Spaces          []Space      `json:"spaces,omitempty"`
-	Collections     []Collection `json:"collections,omitempty"`
-	Papers          []Paper      `json:"papers,omitempty"`
+	Card            string       `json:"card,omitempty" table:"-"`
+	Members         []UserRef    `json:"members,omitempty" table:"-"`
+	SampleFollowers []UserRef    `json:"sampleFollowers,omitempty" table:"-"`
+	Models          []Model      `json:"models,omitempty" table:"-"`
+	Datasets        []Dataset    `json:"datasets,omitempty" table:"-"`
+	Spaces          []Space      `json:"spaces,omitempty" table:"-"`
+	Collections     []Collection `json:"collections,omitempty" table:"-"`
+	Papers          []Paper      `json:"papers,omitempty" table:"-"`
 }
 
 // UnmarshalJSON decodes the known fields and sweeps the rest into Extra.
@@ -114,24 +114,24 @@ func (o *Org) UnmarshalJSON(b []byte) error {
 // UserRef is the compact namespace object embedded everywhere: as a liker, a
 // follower, a member, a commit author, a discussion author, a repo owner.
 type UserRef struct {
-	Name          string `json:"name"`
-	ObjectID      string `json:"_id,omitempty"`
-	Fullname      string `json:"fullname,omitempty"`
-	Type          string `json:"type,omitempty"`
-	AvatarURL     string `json:"avatarUrl,omitempty"`
-	IsPro         bool   `json:"isPro,omitempty"`
-	IsHf          bool   `json:"isHf,omitempty"`
-	IsHfAdmin     bool   `json:"isHfAdmin,omitempty"`
-	IsMod         bool   `json:"isMod,omitempty"`
-	IsEnterprise  bool   `json:"isEnterprise,omitempty"`
-	Plan          string `json:"plan,omitempty"`
-	FollowerCount int    `json:"followerCount,omitempty"`
+	Name          string `json:"name" table:"name"`
+	ObjectID      string `json:"_id,omitempty" table:"-"`
+	Fullname      string `json:"fullname,omitempty" table:"fullname"`
+	Type          string `json:"type,omitempty" table:"type"`
+	AvatarURL     string `json:"avatarUrl,omitempty" table:"-"`
+	IsPro         bool   `json:"isPro,omitempty" table:"-"`
+	IsHf          bool   `json:"isHf,omitempty" table:"-"`
+	IsHfAdmin     bool   `json:"isHfAdmin,omitempty" table:"-"`
+	IsMod         bool   `json:"isMod,omitempty" table:"-"`
+	IsEnterprise  bool   `json:"isEnterprise,omitempty" table:"-"`
+	Plan          string `json:"plan,omitempty" table:"-"`
+	FollowerCount int    `json:"followerCount,omitempty" table:"followers"`
 
 	// IsUserFollowing is relative to the token making the request.
-	IsUserFollowing bool `json:"isUserFollowing,omitempty"`
+	IsUserFollowing bool `json:"isUserFollowing,omitempty" table:"-"`
 
-	URI string `json:"uri,omitempty"`
-	URL string `json:"url,omitempty"`
+	URI string `json:"uri,omitempty" table:"-"`
+	URL string `json:"url,omitempty" table:"-,url"`
 }
 
 // UnmarshalJSON handles the one inconsistency that would otherwise cost half
@@ -228,17 +228,17 @@ type BlogRef struct {
 type Whoami struct {
 	Meta
 
-	Name string `json:"name"`
+	Name string `json:"name" table:"name"`
 	// Whoami is the one endpoint that names the object id "id" rather than "_id".
-	ObjectID  string          `json:"id,omitempty"`
-	Fullname  string          `json:"fullname,omitempty"`
-	Email     string          `json:"email,omitempty"`
-	Type      string          `json:"type,omitempty"`
-	IsPro     bool            `json:"isPro,omitempty"`
-	CanPay    bool            `json:"canPay,omitempty"`
-	AvatarURL string          `json:"avatarUrl,omitempty"`
-	Orgs      []UserRef       `json:"orgs,omitempty"`
-	Auth      json.RawMessage `json:"auth,omitempty"`
+	ObjectID  string          `json:"id,omitempty" table:"-"`
+	Fullname  string          `json:"fullname,omitempty" table:"fullname"`
+	Email     string          `json:"email,omitempty" table:"email"`
+	Type      string          `json:"type,omitempty" table:"type"`
+	IsPro     bool            `json:"isPro,omitempty" table:"pro"`
+	CanPay    bool            `json:"canPay,omitempty" table:"-"`
+	AvatarURL string          `json:"avatarUrl,omitempty" table:"-"`
+	Orgs      []UserRef       `json:"orgs,omitempty" table:"-"`
+	Auth      json.RawMessage `json:"auth,omitempty" table:"-"`
 }
 
 // UnmarshalJSON decodes the known fields and sweeps the rest into Extra.

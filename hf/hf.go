@@ -65,27 +65,36 @@ var RepoKinds = []string{KindModel, KindDataset, KindSpace, KindKernel}
 
 // Meta is embedded in every record. It is the part of a record hf adds rather
 // than reads, and it is what makes a record addressable and auditable.
+//
+// The table tags run through every record type in this package. A record models
+// everything the hub said, which is far more than fits across a terminal, so
+// each type marks the handful of fields worth a column and hides the rest with
+// table:"-". Hidden means hidden from the table, csv, and tsv views only: json
+// and jsonl still carry the whole record, and --fields names any column back
+// into view.
 type Meta struct {
 	// URI is the canonical hf:// address, and the store's primary key.
-	URI string `json:"uri" kit:"id"`
-	// URL is where the entity lives on the web.
-	URL string `json:"url,omitempty"`
+	URI string `json:"uri" kit:"id" table:"-"`
+	// URL is where the entity lives on the web. It is the canonical address for
+	// -o url and stays out of the table, because every record already leads with
+	// an id that says the same thing in a third of the width.
+	URL string `json:"url,omitempty" table:"-,url"`
 	// Kind is one of the Kind constants.
-	Kind string `json:"kind,omitempty"`
+	Kind string `json:"kind,omitempty" table:"-"`
 	// Sources lists every URL that contributed a field to this record, so a
 	// surprising value can always be traced back to what said it.
-	Sources []string `json:"sources,omitempty"`
+	Sources []string `json:"sources,omitempty" table:"-"`
 	// FetchedAt is when the record was assembled.
-	FetchedAt time.Time `json:"fetchedAt,omitzero"`
+	FetchedAt time.Time `json:"fetchedAt,omitzero" table:"-"`
 	// AliasOf is the id the caller asked for, when it differed from the
 	// canonical one. Asking for bert-base-uncased yields a record whose id is
 	// google-bert/bert-base-uncased and whose aliasOf is what was typed.
-	AliasOf string `json:"aliasOf,omitempty"`
+	AliasOf string `json:"aliasOf,omitempty" table:"-"`
 	// Extra holds every field the upstream response carried that this version
 	// of hf does not model. It stays raw so a large integer survives the round
 	// trip, and it is never dropped, because a field hf has not seen is exactly
 	// the field worth noticing.
-	Extra map[string]json.RawMessage `json:"extra,omitempty"`
+	Extra map[string]json.RawMessage `json:"extra,omitempty" table:"-"`
 }
 
 // setMeta fills the computed fields. Every constructor and decode path ends

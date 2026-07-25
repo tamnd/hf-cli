@@ -17,66 +17,71 @@ import (
 // the same key.
 type Card struct {
 	// Universal.
-	License     StringList `json:"license,omitempty"`
-	LicenseName string     `json:"license_name,omitempty"`
-	LicenseLink string     `json:"license_link,omitempty"`
-	Language    StringList `json:"language,omitempty"`
-	Tags        StringList `json:"tags,omitempty"`
-	Datasets    StringList `json:"datasets,omitempty"`
-	Metrics     StringList `json:"metrics,omitempty"`
-	Thumbnail   string     `json:"thumbnail,omitempty"`
-	PrettyName  string     `json:"pretty_name,omitempty"`
-	Viewer      *bool      `json:"viewer,omitempty"`
-	DOI         string     `json:"doi,omitempty"`
+	License     StringList `json:"license,omitempty" table:"license"`
+	LicenseName string     `json:"license_name,omitempty" table:"-"`
+	LicenseLink string     `json:"license_link,omitempty" table:"-"`
+	Language    StringList `json:"language,omitempty" table:"-"`
+	Tags        StringList `json:"tags,omitempty" table:"tags"`
+	Datasets    StringList `json:"datasets,omitempty" table:"-"`
+	Metrics     StringList `json:"metrics,omitempty" table:"-"`
+	Thumbnail   string     `json:"thumbnail,omitempty" table:"-"`
+	PrettyName  string     `json:"pretty_name,omitempty" table:"-"`
+	Viewer      *bool      `json:"viewer,omitempty" table:"-"`
+	DOI         string     `json:"doi,omitempty" table:"-"`
+
+	// PapersWithCodeID links the repo to its Papers with Code entry. It is a
+	// card key the hub reads rather than an author convention, which is why it
+	// is also an expand field on the API.
+	PapersWithCodeID string `json:"paperswithcode_id,omitempty" table:"-"`
 
 	// Model.
-	BaseModel         StringList      `json:"base_model,omitempty"`
-	BaseModelRelation string          `json:"base_model_relation,omitempty"`
-	PipelineTag       string          `json:"pipeline_tag,omitempty"`
-	LibraryName       string          `json:"library_name,omitempty"`
-	ModelIndex        json.RawMessage `json:"model-index,omitempty"`
-	Inference         json.RawMessage `json:"inference,omitempty"`
-	Widget            json.RawMessage `json:"widget,omitempty"`
-	NewVersion        string          `json:"new_version,omitempty"`
-	ExtraGatedPrompt  string          `json:"extra_gated_prompt,omitempty"`
-	CO2Emissions      json.RawMessage `json:"co2_eq_emissions,omitempty"`
-	DuplicatedFrom    string          `json:"duplicated_from,omitempty"`
-	Quantized         json.RawMessage `json:"quantized_by,omitempty"`
+	BaseModel         StringList      `json:"base_model,omitempty" table:"base_model"`
+	BaseModelRelation string          `json:"base_model_relation,omitempty" table:"-"`
+	PipelineTag       string          `json:"pipeline_tag,omitempty" table:"task"`
+	LibraryName       string          `json:"library_name,omitempty" table:"library"`
+	ModelIndex        json.RawMessage `json:"model-index,omitempty" table:"-"`
+	Inference         json.RawMessage `json:"inference,omitempty" table:"-"`
+	Widget            json.RawMessage `json:"widget,omitempty" table:"-"`
+	NewVersion        string          `json:"new_version,omitempty" table:"-"`
+	ExtraGatedPrompt  string          `json:"extra_gated_prompt,omitempty" table:"-"`
+	CO2Emissions      json.RawMessage `json:"co2_eq_emissions,omitempty" table:"-"`
+	DuplicatedFrom    string          `json:"duplicated_from,omitempty" table:"-"`
+	Quantized         json.RawMessage `json:"quantized_by,omitempty" table:"-"`
 
 	// Dataset.
-	TaskCategories      StringList      `json:"task_categories,omitempty"`
-	TaskIDs             StringList      `json:"task_ids,omitempty"`
-	AnnotationsCreators StringList      `json:"annotations_creators,omitempty"`
-	LanguageCreators    StringList      `json:"language_creators,omitempty"`
-	Multilinguality     StringList      `json:"multilinguality,omitempty"`
-	SizeCategories      StringList      `json:"size_categories,omitempty"`
-	SourceDatasets      StringList      `json:"source_datasets,omitempty"`
-	Configs             json.RawMessage `json:"configs,omitempty"`
-	DatasetInfo         json.RawMessage `json:"dataset_info,omitempty"`
-	TrainEvalIndex      json.RawMessage `json:"train-eval-index,omitempty"`
+	TaskCategories      StringList      `json:"task_categories,omitempty" table:"-"`
+	TaskIDs             StringList      `json:"task_ids,omitempty" table:"-"`
+	AnnotationsCreators StringList      `json:"annotations_creators,omitempty" table:"-"`
+	LanguageCreators    StringList      `json:"language_creators,omitempty" table:"-"`
+	Multilinguality     StringList      `json:"multilinguality,omitempty" table:"-"`
+	SizeCategories      StringList      `json:"size_categories,omitempty" table:"-"`
+	SourceDatasets      StringList      `json:"source_datasets,omitempty" table:"-"`
+	Configs             json.RawMessage `json:"configs,omitempty" table:"-"`
+	DatasetInfo         json.RawMessage `json:"dataset_info,omitempty" table:"-"`
+	TrainEvalIndex      json.RawMessage `json:"train-eval-index,omitempty" table:"-"`
 
 	// Space.
-	Title             string     `json:"title,omitempty"`
-	Emoji             string     `json:"emoji,omitempty"`
-	ColorFrom         string     `json:"colorFrom,omitempty"`
-	ColorTo           string     `json:"colorTo,omitempty"`
-	SDK               string     `json:"sdk,omitempty"`
-	SDKVersion        string     `json:"sdk_version,omitempty"`
-	PythonVersion     string     `json:"python_version,omitempty"`
-	AppFile           string     `json:"app_file,omitempty"`
-	AppPort           int        `json:"app_port,omitempty"`
-	BasePath          string     `json:"base_path,omitempty"`
-	Pinned            bool       `json:"pinned,omitempty"`
-	ShortDescription  string     `json:"short_description,omitempty"`
-	Models            StringList `json:"models,omitempty"`
-	SuggestedHardware string     `json:"suggested_hardware,omitempty"`
-	Header            string     `json:"header,omitempty"`
-	Disabled          bool       `json:"disabled,omitempty"`
+	Title             string     `json:"title,omitempty" table:"-"`
+	Emoji             string     `json:"emoji,omitempty" table:"-"`
+	ColorFrom         string     `json:"colorFrom,omitempty" table:"-"`
+	ColorTo           string     `json:"colorTo,omitempty" table:"-"`
+	SDK               string     `json:"sdk,omitempty" table:"-"`
+	SDKVersion        string     `json:"sdk_version,omitempty" table:"-"`
+	PythonVersion     string     `json:"python_version,omitempty" table:"-"`
+	AppFile           string     `json:"app_file,omitempty" table:"-"`
+	AppPort           int        `json:"app_port,omitempty" table:"-"`
+	BasePath          string     `json:"base_path,omitempty" table:"-"`
+	Pinned            bool       `json:"pinned,omitempty" table:"-"`
+	ShortDescription  string     `json:"short_description,omitempty" table:"-"`
+	Models            StringList `json:"models,omitempty" table:"-"`
+	SuggestedHardware string     `json:"suggested_hardware,omitempty" table:"-"`
+	Header            string     `json:"header,omitempty" table:"-"`
+	Disabled          bool       `json:"disabled,omitempty" table:"-"`
 
 	// Extra is every key hf does not model, and there are many: per org
 	// conventions, experiment trackers, and whatever a template happened to
 	// include.
-	Extra map[string]json.RawMessage `json:"-"`
+	Extra map[string]json.RawMessage `json:"-" table:"-"`
 }
 
 // UnmarshalJSON decodes the known keys and keeps the rest.

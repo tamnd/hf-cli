@@ -273,16 +273,43 @@ func (c *Client) Posts(ctx context.Context, limit int, emit func(*Post) error) e
 }
 
 // Post fetches one post by its author and slug.
+//
+// There is no API route for a single post: the feed is the only JSON the hub
+// serves, and the permalink is a rendered page. So this asks the API anyway, in
+// case the route appears, and otherwise reads the page, whose SocialPost
+// payload is the same record the feed hands out.
 func (c *Client) Post(ctx context.Context, id string) (*Post, error) {
 	user, slug, ok := strings.Cut(strings.Trim(id, "/"), "/")
 	if !ok {
 		return nil, errs.Usage("a post id is user/slug, got %q", id)
 	}
 	resp, err := c.Get(ctx, c.api("posts", user, slug))
-	if err != nil {
+	if err == nil {
+		return decodePost(resp.Body, resp)
+	}
+	if errs.KindOf(err) != errs.KindNotFound {
 		return nil, err
 	}
-	return decodePost(resp.Body, resp)
+	return c.postFromPage(ctx, id, err)
+}
+
+// postFromPage reads a post out of its permalink. The API error is carried
+// through when the page has nothing either, because "no such post" is a better
+// answer than "the page did not contain what I expected".
+func (c *Client) postFromPage(ctx context.Context, id string, apiErr error) (*Post, error) {
+	p, perr := c.PageOf(ctx, KindPost, id)
+	if perr != nil {
+		return nil, apiErr
+	}
+	var props struct {
+		Post json.RawMessage `json:"socialPost"`
+	}
+	if !p.Into("SocialPost", &props) || len(props.Post) == 0 {
+		return nil, apiErr
+	}
+	// The page payload is richer than the feed row: it carries the comment
+	// thread, which the feed only counts.
+	return decodePost(props.Post, &Response{URL: p.URL})
 }
 
 func decodePost(raw json.RawMessage, resp *Response) (*Post, error) {
