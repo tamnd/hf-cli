@@ -3,7 +3,6 @@ package hf
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	"math/rand/v2"
 	"net/http"
 	"strings"
@@ -127,12 +126,3 @@ func jitter(n int64) int64 {
 	}
 	return rand.Int64N(n)
 }
-
-// notSupported is the error a viewer-only capability returns for a dataset that
-// does not have it, so `hf stats` on a dataset without statistics exits 7 rather
-// than pretending it found nothing.
-func notSupported(what, dataset string) error {
-	return errs.Unsupported("%s is not available for %s", what, dataset)
-}
-
-var _ = fmt.Sprintf

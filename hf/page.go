@@ -101,7 +101,7 @@ func (c *Client) Page(ctx context.Context, rawURL string) (*Page, error) {
 	p.addSource(rawURL)
 	if kind, id, cerr := Classify(p.URL); cerr == nil {
 		p.Kind = kind
-		p.Meta.URI = URI(kind, id)
+		p.URI = URI(kind, id)
 	}
 	return p, nil
 }

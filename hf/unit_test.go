@@ -297,7 +297,7 @@ func TestTimeDecode(t *testing.T) {
 			t.Errorf("Time(%s): %v", c.in, err)
 			continue
 		}
-		if !got.Time.Equal(c.want) {
+		if !got.Equal(c.want) {
 			t.Errorf("Time(%s) = %v, want %v", c.in, got.Time, c.want)
 		}
 	}
