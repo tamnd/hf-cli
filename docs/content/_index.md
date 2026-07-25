@@ -1,34 +1,46 @@
 ---
 title: "hf"
-description: "A command line for Hugging Face."
-heroTitle: "hf, from the command line"
-heroLead: "A command line for Hugging Face. One pure-Go binary, no API key, output that pipes into the rest of your tools, and a resource-URI driver other programs can address."
+description: "Read huggingface.co as data."
+heroTitle: "The Hugging Face hub, as records"
+heroLead: "Every model, dataset, space, user, org, collection, paper, and post the hub publishes, with every field its source returned, a canonical hf:// address, and edges to everything it names."
 heroPrimaryURL: "/getting-started/quick-start/"
 heroPrimaryText: "Get started"
 ---
 
-`hf` reads public hf data over plain HTTPS, shapes it into
-clean records, and gets out of your way.
+`hf` is one pure-Go binary. It reads huggingface.co over plain HTTPS, shapes
+what comes back into typed records, and prints output that pipes into the rest
+of your tools. Public data needs no API key.
 
 ```bash
-hf page <path>            # fetch one page as a record
-hf page <path> -o json    # as JSON, ready for jq
-hf links <path>           # the pages it links to, each addressable
-hf serve --addr :7777     # the same operations over HTTP
+hf model google-bert/bert-base-uncased      # every field the hub returns
+hf models --author google --sort downloads  # list a million, stop when you like
+hf graph google-bert/bert-base-uncased      # the node and its edges
+hf rdf   google-bert/bert-base-uncased --format ttl
 ```
 
-There is nothing to sign up for and nothing to run alongside it. Output adapts
-to where it goes: an aligned table on your terminal, JSONL the moment you pipe
-it somewhere.
+Output adapts to where it goes: an aligned table on your terminal, JSONL the
+moment you pipe it somewhere.
+
+## What makes it different
+
+- **Nothing is dropped.** Every record type sweeps the fields it does not model
+  into an `extra` map, and the test suite fails when one shows up. If the hub
+  returns it, you get it.
+- **Two planes.** Parts of the hub have no API, and other parts tell a browser
+  more than they tell `/api`. `--deep` reads the rendered page and merges the
+  JSON it already carries.
+- **It is a graph.** Repo ids, tags, card front matter, and explicit id
+  references all become typed edges, each one recording where it came from.
+- **It exports linked data.** N-Triples, Turtle, JSON-LD, N-Quads, and the
+  hub's own Croissant document.
 
 ## Two ways to use it
 
-- **As a command** for reading hf by hand or in a script. Start with
-  the [quick start](/getting-started/quick-start/).
+- **As a command** for reading the hub by hand or in a script. Start with the
+  [quick start](/getting-started/quick-start/).
 - **As a resource-URI driver** so a host like
-  [ant](https://github.com/tamnd/ant) can address hf as
-  `hf://` URIs and follow links across sites. See
-  [resource URIs](/guides/resource-uris/).
+  [ant](https://github.com/tamnd/ant) can address the hub as `hf://` URIs and
+  follow links across sites. See [resource URIs](/guides/resource-uris/).
 
 Both are the same code: one operation, declared once, is a CLI command, an HTTP
 route, an MCP tool, and a URI dereference.
